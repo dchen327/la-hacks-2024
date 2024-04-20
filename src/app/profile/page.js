@@ -3,6 +3,7 @@ import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase/config";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import ChatBot from "../components/ChatBot.js";
 
 export default function Page() {
   const [user, setUser] = useState(null);
@@ -29,12 +30,15 @@ export default function Page() {
       console.error(err);
     }
   };
-
+  
   return (
     <div>
       <button onClick={() => logOut()} className="button is-primary">
         Sign Out
       </button>
+
+      <ChatBot />
     </div>
   );
+  
 }
