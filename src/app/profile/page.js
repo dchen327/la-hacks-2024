@@ -138,7 +138,7 @@ export default function ProfilePage() {
       </div>
     </div>
 
-    <div class="field">
+    <div className="field">
       <label className="label">Country</label>
       <p class="control has-icons-left">
         <span class="select">
@@ -148,7 +148,7 @@ export default function ProfilePage() {
             <option>Other</option>
           </select>
         </span>
-        <span class="icon is-small is-left">
+        <span className="icon is-small is-left">
           <FontAwesomeIcon icon={faGlobe} />
         </span>
       </p>
@@ -220,10 +220,10 @@ export default function ProfilePage() {
       <label className="label">Email</label>
       <div className="control has-icons-left has-icons-right">
         <input className="input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter your email" />
-        <span class="icon is-left">
+        <span className="icon is-left">
           <FontAwesomeIcon icon={faEnvelope} />
         </span>
-        <span class="icon is-right">
+        <span className="icon is-right">
           <FontAwesomeIcon icon={faEnvelope} />
         </span>
       </div>
