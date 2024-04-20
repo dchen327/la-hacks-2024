@@ -264,7 +264,8 @@ export default function ProfilePage() {
       </div>
     
     <h1 className="title">Questions?</h1>
-    <div><ChatBot /></div>
+    <div><ChatBot userInfo={{ name: name, state: state, country: country, age: age }} />
+</div>
     <div className="field is-grouped">
       <div className="control">
         <button className="button is-primary" onClick={updateUserProfile}>Update Profile</button>

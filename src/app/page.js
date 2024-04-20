@@ -10,6 +10,7 @@ import {
 } from "@vis.gl/react-google-maps";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import { useMap } from "@vis.gl/react-google-maps";
+import { EventMapModal } from "./components/EventMapModal";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 
 const eventEmojis = {
@@ -20,7 +21,7 @@ const eventEmojis = {
   sustainability: "♻️",
 };
 
-const Markers = ({ events }) => {
+const Markers = ({ events, setClickedEvent, setShowEventMapModal }) => {
   const map = useMap();
   const [markers, setMarkers] = useState({});
   const clusterer = useRef(null);
@@ -47,6 +48,17 @@ const Markers = ({ events }) => {
     });
   };
 
+  const handleMarkerClick = (event) => {
+    map.setZoom(14);
+    map.panTo(event.location);
+    setClickedEvent(event);
+
+    const listener = map.addListener("idle", () => {
+      setShowEventMapModal(true);
+      google.maps.event.removeListener(listener);
+    });
+  };
+
   return (
     <>
       {events.map((event) => (
@@ -54,6 +66,7 @@ const Markers = ({ events }) => {
           position={event.location}
           key={event.key}
           ref={(marker) => setMarkerRef(marker, event.key)}
+          onClick={() => handleMarkerClick(event)}
         >
           <span className="text-2xl">{eventEmojis[event.type]}</span>
         </AdvancedMarker>
@@ -64,6 +77,8 @@ const Markers = ({ events }) => {
 
 export default function Home() {
   const [user, loading, error] = useAuthState(auth);
+  const [showEventMapModal, setShowEventMapModal] = useState(false);
+  const [clickedEvent, setClickedEvent] = useState({});
   const [searchValue, setSearchValue] = useState(null);
 
   const events = [
@@ -143,9 +158,19 @@ export default function Home() {
             gestureHandling={"greedy"}
             disableDefaultUI={true}
           >
-            <Markers events={events} />
+            <Markers
+              events={events}
+              setClickedEvent={setClickedEvent}
+              setShowEventMapModal={setShowEventMapModal}
+            />
           </Map>
         </APIProvider>
+        {showEventMapModal && (
+          <EventMapModal
+            event={clickedEvent}
+            onClose={() => setShowEventMapModal(false)}
+          />
+        )}
       </div>
     );
   }
