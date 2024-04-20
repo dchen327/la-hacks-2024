@@ -14,7 +14,7 @@ const ChatBot = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const preliminaryInfo = "You are a bot for an app that gives people information on nearby social and outdoor events. If a user asks a question not related to social or outdoor events, please respond with a message saying \"Sorry, I am not programmed to answer this type of question. Please ask another one\"";
+      const preliminaryInfo = "You are a bot for an app that gives people information on nearby social and outdoor events. If you cannot respond within the token limit, please do not cut off mid-sentence. If a user asks a question not related to social or outdoor events, please respond with a message saying \"Sorry, I am not programmed to answer this type of question. Please ask another one\"";
       const fullPrompt = preliminaryInfo + prompt;
 
       const completion = await openai.completions.create({
