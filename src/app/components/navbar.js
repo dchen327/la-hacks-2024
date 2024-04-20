@@ -50,11 +50,11 @@ export const Navbar = () => {
             <Link href="/" className="navbar-item has-text-centered">
               <p className="text-lg">Market</p>
             </Link>
-            <Link href="/listings" className="navbar-item has-text-centered">
-              <p className="text-lg">Listings</p>
+            <Link href="/upcoming" className="navbar-item has-text-centered">
+              <p className="text-lg">Upcoming</p>
             </Link>
-            <Link href="/insearchof" className="navbar-item has-text-centered">
-              <p className="text-lg">ISO</p>
+            <Link href="/create" className="navbar-item has-text-centered">
+              <p className="text-lg">Create</p>
             </Link>
           </div>
           <div className="navbar-end">
@@ -96,18 +96,18 @@ export const Navbar = () => {
             <p className="is-size-7">Market</p>
           </Link>
           <Link
-            href="/listings"
+            href="/upcoming"
             className="navbar-item is-expanded is-block has-text-centered"
           >
             <FontAwesomeIcon icon={faList} />
-            <p className="is-size-7">Listings</p>
+            <p className="is-size-7">Upcoming</p>
           </Link>
           <Link
-            href="/insearchof"
+            href="/create"
             className="navbar-item is-expanded is-block has-text-centered"
           >
             <FontAwesomeIcon icon={faMagnifyingGlass} />
-            <p className="is-size-7">ISO</p>
+            <p className="is-size-7">Create</p>
           </Link>
           <Link
             href="/profile"

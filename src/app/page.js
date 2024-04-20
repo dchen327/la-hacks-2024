@@ -26,7 +26,7 @@ export default function Home() {
   if (user) {
     return (
       <div>
-        <div>Hello {user.displayName.split(" ")[0]}</div>
+        <div className="title">Hello {user.displayName.split(" ")[0]}</div>
       </div>
     );
   }
