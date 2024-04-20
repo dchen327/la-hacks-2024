@@ -1,12 +1,11 @@
-import { useState } from "react"
-const { Configuration, OpenAIApi } = require("openai");
+import { useState } from "react";
+import OpenAI from "openai";
 
 const ChatBot = () => {
-  const configuration = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
+  const openai = new OpenAI({
+    apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+    dangerouslyAllowBrowser: true,
   });
-
-  const openai = new OpenAIApi(configuration);
   const [prompt, setPrompt] = useState("");
   const [apiResponse, setApiResponse] = useState("");
   const [loading, setLoading] = useState(false);
@@ -15,21 +14,19 @@ const ChatBot = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const result = await openai.createCompletion({
-        model: "text-davinci-003",
+      const completion = await openai.completions.create({
+        model: "gpt-3.5-turbo-instruct",
         prompt: prompt,
-        temperature: 0.5,
-        max_tokens: 4000,
+        max_tokens: 30,
       });
-      //console.log("response", result.data.choices[0].text);
-      setApiResponse(result.data.choices[0].text);
+      console.log(completion.choices[0].text);
+      setApiResponse(completion.choices[0].text);
     } catch (e) {
-      //console.log(e);
+      console.log(e);
       setApiResponse("Something is going wrong, Please try again.");
     }
     setLoading(false);
   };
-
 
   return (
     <>
@@ -38,7 +35,7 @@ const ChatBot = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          height: '100vh',
+          height: "100vh",
         }}
       >
         <form onSubmit={handleSubmit}>
@@ -48,10 +45,7 @@ const ChatBot = () => {
             placeholder="Please ask to openai"
             onChange={(e) => setPrompt(e.target.value)}
           ></textarea>
-          <button
-            disabled={loading || prompt.length === 0}
-            type="submit"
-          >
+          <button disabled={loading || prompt.length === 0} type="submit">
             {loading ? "Generating..." : "Generate"}
           </button>
         </form>
@@ -72,6 +66,5 @@ const ChatBot = () => {
     </>
   );
 };
-
 
 export default ChatBot;
