@@ -34,3 +34,16 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+venv
+.env
+
+*/__pycache__/
+**/*.pyc
+
+# firebase emulator logs
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+.zshrc
