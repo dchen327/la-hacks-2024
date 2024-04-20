@@ -128,7 +128,7 @@ export default function Home() {
           Hello {user.displayName.split(" ")[0]}
         </div>
         <div>
-          <h1>Google Maps Search</h1>
+          <h1 className="subtitle mt-1 mx-2 mt-2 mb-0">Search </h1>
           <GooglePlacesAutocomplete
             selectProps={(searchValue, setSearchValue)}
             apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
