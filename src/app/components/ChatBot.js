@@ -6,71 +6,85 @@ const ChatBot = () => {
     apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
     dangerouslyAllowBrowser: true,
   });
-  const [prompt, setPrompt] = useState("");  
-  const [apiResponse, setApiResponse] = useState("");
+  const [prompt, setPrompt] = useState("");
+  const [messageHistory, setMessageHistory] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const preliminaryInfo = "You are a bot for an app that gives people information on nearby social and outdoor events. If a user asks a question not related to social or outdoor events, please respond with a message saying \"Sorry, I am not programmed to answer this type of question. Please ask another one\" \n\n";
+      const preliminaryInfo = "You are a bot for an app that gives people information on nearby social and outdoor events. If a user asks a question not related to social or outdoor events, please respond with a message saying \"Sorry, I am not programmed to answer this type of question. Please ask another one\"";
       const fullPrompt = preliminaryInfo + prompt;
 
       const completion = await openai.completions.create({
         model: "gpt-3.5-turbo-instruct",
         prompt: fullPrompt,
-        max_tokens: 300,
+        max_tokens: 100,
       });
-      setApiResponse(completion.choices[0].text);
+      const newApiResponse = completion.choices[0].text;
+
+      setMessageHistory([
+        ...messageHistory,
+        { question: prompt, response: newApiResponse }
+      ]);
     } catch (e) {
       console.log(e);
-      setApiResponse("Something is going wrong. Please try again.");
+      setMessageHistory([
+        ...messageHistory,
+        { question: prompt, response: "Something is going wrong. Please try again." }
+      ]);
     }
     setLoading(false);
+    setPrompt(""); // Clear prompt after submission
   };
 
   return (
     <section className="section">
       <div className="container">
-        <form onSubmit={handleSubmit}>
-          <div className="field">
-            <label htmlFor="prompt" className="label">Input</label>
-            <div className="control">
-              <textarea
-                id="prompt"
-                className="textarea"
-                value={prompt}
-                placeholder="Please ask to OpenAI"
-                onChange={(e) => setPrompt(e.target.value)}
-              ></textarea>
+        <div className="columns">
+          <div className="column is-half">
+            <div className="box">
+              <h2 className="subtitle">Message History</h2>
+              <ul>
+                {messageHistory.map((message, index) => (
+                  <li key={index}>
+                    <strong>Question:</strong> {message.question}<br />
+                    <strong>Response:</strong> {message.response}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
-          <div className="field">
-            <div className="control">
-              <button
-                className={`button is-primary ${loading ? 'is-loading' : ''}`}
-                disabled={loading || prompt.length === 0}
-                type="submit"
-              >
-                Generate
-              </button>
+          <div className="column is-half">
+            <div className="box">
+              <h2 className="subtitle">Chat</h2>
+              <form onSubmit={handleSubmit}>
+                <div className="field">
+                  <div className="control">
+                    <textarea
+                      className="textarea"
+                      value={prompt}
+                      placeholder="Please ask to OpenAI"
+                      onChange={(e) => setPrompt(e.target.value)}
+                    ></textarea>
+                  </div>
+                </div>
+                <div className="field">
+                  <div className="control">
+                    <button
+                      className={`button is-primary ${loading ? 'is-loading' : ''}`}
+                      disabled={loading || prompt.length === 0}
+                      type="submit"
+                    >
+                      Generate
+                    </button>
+                  </div>
+                </div>
+              </form>
             </div>
           </div>
-        </form>
-
-        {apiResponse && (
-          <div className="field">
-            <label className="label">Chat response</label>
-            <div className="control">
-              <textarea
-                className="textarea is-success"
-                readOnly
-                value={apiResponse}
-              ></textarea>
-            </div>
-          </div>
-        )}
+        </div>
       </div>
     </section>
   );
