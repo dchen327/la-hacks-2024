@@ -4,7 +4,14 @@ import { auth, googleProvider } from "../firebase/config";
 import { signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faList, faShop, faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHome,
+  faList,
+  faPlus,
+  faPlusCircle,
+  faShop,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import { faCircleUser } from "@fortawesome/free-regular-svg-icons";
@@ -48,7 +55,7 @@ export const Navbar = () => {
         <div className="navbar-menu is-active ">
           <div className="navbar-start">
             <Link href="/" className="navbar-item has-text-centered">
-              <p className="text-lg">Market</p>
+              <p className="text-lg">Home</p>
             </Link>
             <Link href="/upcoming" className="navbar-item has-text-centered">
               <p className="text-lg">Upcoming</p>
@@ -92,8 +99,8 @@ export const Navbar = () => {
             href="/"
             className="navbar-item is-expanded is-block has-text-centered"
           >
-            <FontAwesomeIcon icon={faShop} />
-            <p className="is-size-7">Market</p>
+            <FontAwesomeIcon icon={faHome} />
+            <p className="is-size-7">Home</p>
           </Link>
           <Link
             href="/upcoming"
@@ -106,7 +113,7 @@ export const Navbar = () => {
             href="/create"
             className="navbar-item is-expanded is-block has-text-centered"
           >
-            <FontAwesomeIcon icon={faMagnifyingGlass} />
+            <FontAwesomeIcon icon={faPlus} />
             <p className="is-size-7">Create</p>
           </Link>
           <Link
