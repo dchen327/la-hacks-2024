@@ -13,6 +13,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.5.2",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@googlemaps/markerclusterer": "^2.5.3",
     "@vis.gl/react-google-maps": "^0.9.0",
     "axios": "^1.6.8",
     "bulma": "^0.9.4",
