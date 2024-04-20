@@ -5,14 +5,10 @@ import { signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faHome,
-  faList,
-  faPlus,
-  faPlusCircle,
-  faShop,
-  faUser,
+    faHome,
+    faList,
+    faPlus, faUser
 } from "@fortawesome/free-solid-svg-icons";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import { faCircleUser } from "@fortawesome/free-regular-svg-icons";
 
