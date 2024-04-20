@@ -140,8 +140,8 @@ export default function ProfilePage() {
 
     <div className="field">
       <label className="label">Country</label>
-      <p class="control has-icons-left">
-        <span class="select">
+      <p className="control has-icons-left">
+        <span className="select">
           <select onChange={(e) => setCountry(e.target.value)} value={country}>
             <option selected>Country</option>
             <option>United States</option>
@@ -288,7 +288,7 @@ export default function ProfilePage() {
       </div>
     
     <h1 className="title">Questions?</h1>
-    <div><ChatBot /></div>
+    <div><ChatBot userInfo={{ name: name, state: state, country: country, age: age }}  /></div>
     <div className="field is-grouped mb-20">
 
         <div className="control">
