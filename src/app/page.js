@@ -1,7 +1,12 @@
 "use client";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase/config";
-import { EventCard } from "./components/EventCard";
+import {
+  APIProvider,
+  AdvancedMarker,
+  Map,
+  Marker,
+} from "@vis.gl/react-google-maps";
 
 export default function Home() {
   const [user, loading, error] = useAuthState(auth);
@@ -67,19 +72,19 @@ export default function Home() {
         <div className="title mx-2 mt-2 mb-0">
           Hello {user.displayName.split(" ")[0]}
         </div>
-        {events.map((event, idx) => (
-          <>
-            <div
-            // onClick={() => {
-            //   setCurrentItem(event);
-            //   setShowItemModal(true);
-            // }}
-            >
-              <EventCard key={idx} event={event} />
-            </div>
-            {idx !== events.length - 1 && <hr className="py-[1px]" />}
-          </>
-        ))}
+        <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}>
+          <Map
+            style={{ width: "100vw", height: "100vh" }}
+            mapId={"bf51a910020fa25a"}
+            defaultCenter={{ lat: 34.11228, lng: -117.71489 }}
+            defaultZoom={11}
+            gestureHandling={"greedy"}
+            disableDefaultUI={true}
+          >
+            
+            <AdvancedMarker position={{ lat: 34.11228, lng: -117.71489 }} />
+          </Map>
+        </APIProvider>
       </div>
     );
   }
