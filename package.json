@@ -13,14 +13,21 @@
     "@fortawesome/free-regular-svg-icons": "^6.5.2",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@googlemaps/markerclusterer": "^2.5.3",
+    "@vis.gl/react-google-maps": "^0.9.0",
+    "axios": "^1.6.8",
     "bulma": "^0.9.4",
+    "dotenv": "^16.4.5",
     "firebase": "^10.11.0",
     "next": "14.2.2",
+    "openai": "^4.38.2",
     "react": "^18",
     "react-dom": "^18",
-    "react-firebase-hooks": "^5.1.1"
+    "react-firebase-hooks": "^5.1.1",
+    "react-svg-radar-chart": "^1.4.0"
   },
   "devDependencies": {
+    "@types/react": "^18.2.79",
     "eslint": "^8",
     "eslint-config-next": "14.2.2",
     "postcss": "^8",
