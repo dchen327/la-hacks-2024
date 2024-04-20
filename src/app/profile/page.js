@@ -1,10 +1,11 @@
 "use client";
 import { signOut, onAuthStateChanged } from "firebase/auth";
-import { auth, googleProvider, firestore } from "../firebase/config";
+import { auth, googleProvider } from "../firebase/config";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import ChatBot from "../components/ChatBot.js";
 import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { db } from "../firebase/config";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import RadarChart from 'react-svg-radar-chart';
 import 'react-svg-radar-chart/build/css/index.css'
@@ -26,6 +27,9 @@ export default function ProfilePage() {
   const [seatLimit, setSeatLimit] = useState(0);
   const [distanceLimit, setDistanceLimit] = useState(0);
   const router = useRouter();
+
+  const [isUpdated, setIsUpdated] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleDriverChange = (event) => {
     setIsDriver(event.target.value === 'yes');
@@ -67,7 +71,7 @@ export default function ProfilePage() {
   }, [router]);
 
   const loadUserProfile = async (userId) => {
-    const docRef = doc(firestore, "users", userId);
+    const docRef = doc(db, "users", userId);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       const data = docSnap.data();
@@ -86,18 +90,38 @@ export default function ProfilePage() {
 
   const updateUserProfile = async () => {
     if (!user) return;
-    const userRef = doc(firestore, "users", user.uid);
+    const userRef = doc(db, "users", user.uid);
     try {
       await setDoc(userRef, { name, age, email, country, state, isDriver, seatLimit, distanceLimit }, { merge: true });
-      alert('Profile updated successfully!');
+      setIsUpdated(true);
     } catch (error) {
       console.error("Error updating profile: ", error);
-      alert('Failed to update profile.');
+      setErrorMessage(error.message); 
+      setIsUpdated(false);
     }
   };
   
   return (
-  <div className="container">
+    <div className="container">
+      {isUpdated && (
+        <div className="notification is-success">
+          <button
+            className="delete"
+            onClick={() => setIsUpdated(false)}
+          ></button>
+          Profile successfully updated!
+        </div>
+      )}
+      {errorMessage && (
+        <div className="notification is-danger">
+          <button
+            className="delete"
+            onClick={() => setErrorMessage("")}
+          ></button>
+          {errorMessage}
+        </div>
+      )}
+
     <h1 className="title">My Profile</h1>
     
     <div className="field">
@@ -116,8 +140,8 @@ export default function ProfilePage() {
 
     <div className="field">
       <label className="label">Country</label>
-      <p className="control has-icons-left">
-        <span className="select">
+      <p class="control has-icons-left">
+        <span class="select">
           <select onChange={(e) => setCountry(e.target.value)} value={country}>
             <option selected>Country</option>
             <option>United States</option>
@@ -264,7 +288,7 @@ export default function ProfilePage() {
       </div>
     
     <h1 className="title">Questions?</h1>
-    <div><ChatBot userInfo={{ name: name, state: state, country: country, age: age, email: email }}  /></div>
+    <div><ChatBot /></div>
     <div className="field is-grouped mb-20">
 
         <div className="control">

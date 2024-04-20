@@ -11,6 +11,7 @@ import {
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import { useMap } from "@vis.gl/react-google-maps";
 import { EventMapModal } from "./components/EventMapModal";
+import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 
 const eventEmojis = {
   sport: "⚽",
@@ -78,6 +79,7 @@ export default function Home() {
   const [user, loading, error] = useAuthState(auth);
   const [showEventMapModal, setShowEventMapModal] = useState(false);
   const [clickedEvent, setClickedEvent] = useState({});
+  const [searchValue, setSearchValue] = useState(null);
 
   const events = [
     {
@@ -140,6 +142,13 @@ export default function Home() {
         <div className="title mx-2 mt-2 mb-0">
           Hello {user.displayName.split(" ")[0]}
         </div>
+        <div>
+          <h1 className="subtitle mt-1 mx-2 mt-2 mb-0">Search </h1>
+          <GooglePlacesAutocomplete
+            selectProps={(searchValue, setSearchValue)}
+            apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
+          />
+        </div>
         <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}>
           <Map
             style={{ width: "100vw", height: "100vh" }}
@@ -165,4 +174,5 @@ export default function Home() {
       </div>
     );
   }
+
 }
