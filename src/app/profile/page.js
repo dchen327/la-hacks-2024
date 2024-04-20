@@ -1,9 +1,11 @@
 "use client";
-import { signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
+import { signOut, onAuthStateChanged } from "firebase/auth";
+import { auth } from "../firebase/config";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 export default function Page() {
+  const [user, setUser] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -30,7 +32,9 @@ export default function Page() {
 
   return (
     <div>
-      <div className="button is-primary">Hello, world!</div>
+      <button onClick={() => logOut()} className="button is-primary">
+        Sign Out
+      </button>
     </div>
   );
 }

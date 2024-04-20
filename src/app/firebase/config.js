@@ -10,9 +10,7 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-console.log("HELLO");
 // Initialize Firebase and Auth, export for use elsewhere
 initializeApp(firebaseConfig);
 export const auth = getAuth();
 export const googleProvider = new GoogleAuthProvider();
-console.log("HI");
