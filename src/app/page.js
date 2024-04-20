@@ -85,10 +85,11 @@ export default function Home() {
   const map = useMap();
 
   useEffect(() => {
-    if (map && selectedLocation) {
-      map.panTo(selectedLocation);
+    console.log("selected location changed");
+    if (map && searchValue) {
+      map.panTo(searchValue);
     }
-  }, [map, selectedLocation]);
+  }, [map, searchValue]);
 
   const events = [
     {
@@ -151,10 +152,11 @@ export default function Home() {
         <div className="title mx-2 mt-2 mb-0">
           Hello {user.displayName.split(" ")[0]}
         </div>
+        <div>{searchValue}</div>
         <div>
           <h1 className="subtitle mt-1 mx-2 mt-2 mb-0">Search </h1>
           <GooglePlacesAutocomplete
-            selectProps={(searchValue, setSearchValue)}
+            selectProps={{ searchValue, onChange: setSearchValue }}
             autocompletionRequest={{
               componentRestrictions: {
                 country: ["us"],
