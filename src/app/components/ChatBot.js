@@ -7,63 +7,86 @@ const ChatBot = () => {
     dangerouslyAllowBrowser: true,
   });
   const [prompt, setPrompt] = useState("");
-  const [apiResponse, setApiResponse] = useState("");
+  const [messageHistory, setMessageHistory] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
+      const preliminaryInfo = "You are a bot for an app that gives people information on nearby social and outdoor events. If a user asks a question not related to social or outdoor events, please respond with a message saying \"Sorry, I am not programmed to answer this type of question. Please ask another one\"";
+      const fullPrompt = preliminaryInfo + prompt;
+
       const completion = await openai.completions.create({
         model: "gpt-3.5-turbo-instruct",
-        prompt: prompt,
-        max_tokens: 30,
+        prompt: fullPrompt,
+        max_tokens: 100,
       });
-      console.log(completion.choices[0].text);
-      setApiResponse(completion.choices[0].text);
+      const newApiResponse = completion.choices[0].text;
+
+      setMessageHistory([
+        ...messageHistory,
+        { question: prompt, response: newApiResponse }
+      ]);
     } catch (e) {
       console.log(e);
-      setApiResponse("Something is going wrong, Please try again.");
+      setMessageHistory([
+        ...messageHistory,
+        { question: prompt, response: "Something is going wrong. Please try again." }
+      ]);
     }
     setLoading(false);
+    setPrompt(""); // Clear prompt after submission
   };
 
   return (
-    <>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        <form onSubmit={handleSubmit}>
-          <textarea
-            type="text"
-            value={prompt}
-            placeholder="Please ask to openai"
-            onChange={(e) => setPrompt(e.target.value)}
-          ></textarea>
-          <button disabled={loading || prompt.length === 0} type="submit">
-            {loading ? "Generating..." : "Generate"}
-          </button>
-        </form>
-      </div>
-      {apiResponse && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <pre>
-            <strong>API response:</strong>
-            {apiResponse}
-          </pre>
+    <section className="section">
+      <div className="container">
+        <div className="columns">
+          <div className="column is-half">
+            <div className="box">
+              <h2 className="subtitle">Message History</h2>
+              <ul>
+                {messageHistory.map((message, index) => (
+                  <li key={index}>
+                    <strong>Question:</strong> {message.question}<br />
+                    <strong>Response:</strong> {message.response}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <div className="column is-half">
+            <div className="box">
+              <h2 className="subtitle">Chat</h2>
+              <form onSubmit={handleSubmit}>
+                <div className="field">
+                  <div className="control">
+                    <textarea
+                      className="textarea"
+                      value={prompt}
+                      placeholder="Please ask to OpenAI"
+                      onChange={(e) => setPrompt(e.target.value)}
+                    ></textarea>
+                  </div>
+                </div>
+                <div className="field">
+                  <div className="control">
+                    <button
+                      className={`button is-primary ${loading ? 'is-loading' : ''}`}
+                      disabled={loading || prompt.length === 0}
+                      type="submit"
+                    >
+                      Generate
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
-      )}
-    </>
+      </div>
+    </section>
   );
 };
 
