@@ -84,6 +84,10 @@ export default function Home() {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const map = useMap();
 
+  const handleMapClick = (event) => {
+    console.log(event.detail.latLng);
+  };
+
   useEffect(() => {
     console.log("selected location changed");
     if (map && searchValue) {
@@ -173,6 +177,7 @@ export default function Home() {
             defaultZoom={11}
             gestureHandling={"greedy"}
             disableDefaultUI={true}
+            onClick={handleMapClick}
           >
             <Markers
               events={events}
@@ -190,5 +195,4 @@ export default function Home() {
       </div>
     );
   }
-
 }
