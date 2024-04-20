@@ -1,7 +1,65 @@
 "use client";
+import React, { useEffect, useState, useRef } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase/config";
-import { EventCard } from "./components/EventCard";
+import {
+  APIProvider,
+  AdvancedMarker,
+  Map,
+  Marker,
+} from "@vis.gl/react-google-maps";
+import { MarkerClusterer } from "@googlemaps/markerclusterer";
+import { useMap } from "@vis.gl/react-google-maps";
+
+const eventEmojis = {
+  sport: "⚽",
+  nature: "🌳",
+  community: "🏘️",
+  leadership: "👑",
+  sustainability: "♻️",
+};
+
+const Markers = ({ events }) => {
+  const map = useMap();
+  const [markers, setMarkers] = useState({});
+  const clusterer = useRef(null);
+
+  useEffect(() => {
+    if (!map) return;
+    if (!clusterer.current) {
+      clusterer.current = new MarkerClusterer({ map });
+    }
+  }, [map]);
+
+  const setMarkerRef = (marker, key) => {
+    if (marker && markers[key]) return;
+    if (!marker && !markers[key]) return;
+
+    setMarkers((prev) => {
+      if (marker) {
+        return { ...prev, [key]: marker };
+      } else {
+        const newMarkers = { ...prev };
+        delete newMarkers[key];
+        return newMarkers;
+      }
+    });
+  };
+
+  return (
+    <>
+      {events.map((event) => (
+        <AdvancedMarker
+          position={event.location}
+          key={event.key}
+          ref={(marker) => setMarkerRef(marker, event.key)}
+        >
+          <span className="text-2xl">{eventEmojis[event.type]}</span>
+        </AdvancedMarker>
+      ))}
+    </>
+  );
+};
 
 export default function Home() {
   const [user, loading, error] = useAuthState(auth);
@@ -14,7 +72,7 @@ export default function Home() {
       leader: "John Doe",
       startTime: new Date("2022-04-01T10:00:00Z"),
       endTime: new Date("2022-04-01T12:00:00Z"),
-      location: "Local Stadium",
+      location: { lat: 34.11228, lng: -117.71489 },
       usersAttending: ["user1", "user2", "user3"],
       pictures: ["pic1.jpg", "pic2.jpg", "pic3.jpg"],
     },
@@ -25,7 +83,7 @@ export default function Home() {
       leader: "Jane Smith",
       startTime: new Date("2022-04-02T09:00:00Z"),
       endTime: new Date("2022-04-02T11:00:00Z"),
-      location: "Local Nature Reserve",
+      location: { lat: 34.21228, lng: -117.71489 },
       usersAttending: ["user4", "user5", "user6"],
       pictures: ["pic4.jpg", "pic5.jpg", "pic6.jpg"],
     },
@@ -36,7 +94,7 @@ export default function Home() {
       leader: "Bob Johnson",
       startTime: new Date("2022-04-03T13:00:00Z"),
       endTime: new Date("2022-04-03T15:00:00Z"),
-      location: "Local Park",
+      location: { lat: 34.11228, lng: -117.81489 },
       usersAttending: ["user7", "user8", "user9"],
       pictures: ["pic7.jpg", "pic8.jpg", "pic9.jpg"],
     },
@@ -64,20 +122,21 @@ export default function Home() {
   if (user) {
     return (
       <div>
-        <div className="title">Hello {user.displayName.split(" ")[0]}</div>
-        {events.map((event, idx) => (
-          <>
-            <div
-            // onClick={() => {
-            //   setCurrentItem(event);
-            //   setShowItemModal(true);
-            // }}
-            >
-              <EventCard key={idx} event={event} />
-            </div>
-            {idx !== events.length - 1 && <hr className="py-[1px]" />}
-          </>
-        ))}
+        <div className="title mx-2 mt-2 mb-0">
+          Hello {user.displayName.split(" ")[0]}
+        </div>
+        <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}>
+          <Map
+            style={{ width: "100vw", height: "100vh" }}
+            mapId={"bf51a910020fa25a"}
+            defaultCenter={{ lat: 34.11228, lng: -117.71489 }}
+            defaultZoom={11}
+            gestureHandling={"greedy"}
+            disableDefaultUI={true}
+          >
+            <Markers events={events} />
+          </Map>
+        </APIProvider>
       </div>
     );
   }

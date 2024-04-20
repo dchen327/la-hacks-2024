@@ -3,6 +3,7 @@ import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth, googleProvider, firestore } from "../firebase/config";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import ChatBot from "../components/ChatBot.js";
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import RadarChart from 'react-svg-radar-chart';
@@ -94,7 +95,7 @@ export default function ProfilePage() {
       alert('Failed to update profile.');
     }
   };
-
+  
   return (
   <div className="container">
     <h1 className="title">My Profile</h1>
@@ -261,7 +262,9 @@ export default function ProfilePage() {
           size={450}
         />
       </div>
-
+    
+    <h1 className="title">Questions?</h1>
+    <div><ChatBot /></div>
     <div className="field is-grouped">
       <div className="control">
         <button className="button is-primary" onClick={updateUserProfile}>Update Profile</button>
@@ -273,4 +276,5 @@ export default function ProfilePage() {
   </div>
 
   );
+  
 }
