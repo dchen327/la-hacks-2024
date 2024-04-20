@@ -64,7 +64,9 @@ export default function Home() {
   if (user) {
     return (
       <div>
-        <div className="title">Hello {user.displayName.split(" ")[0]}</div>
+        <div className="title mx-2 mt-2 mb-0">
+          Hello {user.displayName.split(" ")[0]}
+        </div>
         {events.map((event, idx) => (
           <>
             <div
