@@ -16,7 +16,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html className="has-navbar-fixed-bottom" lang="en">
       <body className={inter.className}>
         <Navbar />
         {/* Hacky invisible div to offset navbar on desktop but not mobile */}
