@@ -10,7 +10,7 @@ import {
 } from "@vis.gl/react-google-maps";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import { useMap } from "@vis.gl/react-google-maps";
-import GoogleMapSearchBox from '../app/components/mapautocomplete.js';
+import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 
 const eventEmojis = {
   sport: "⚽",
@@ -64,6 +64,7 @@ const Markers = ({ events }) => {
 
 export default function Home() {
   const [user, loading, error] = useAuthState(auth);
+  const [searchValue, setSearchValue] = useState(null);
 
   const events = [
     {
@@ -127,8 +128,11 @@ export default function Home() {
           Hello {user.displayName.split(" ")[0]}
         </div>
         <div>
-        <h1>Google Maps Search</h1>
-        <GoogleMapSearchBox />
+          <h1>Google Maps Search</h1>
+          <GooglePlacesAutocomplete
+            selectProps={(searchValue, setSearchValue)}
+            apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
+          />
         </div>
         <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}>
           <Map
