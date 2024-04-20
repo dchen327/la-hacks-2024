@@ -7,7 +7,7 @@ const ChatBot = () => {
     dangerouslyAllowBrowser: true,
   });
   const [prompt, setPrompt] = useState("");
-  const [apiResponses, setApiResponses] = useState([]);
+  const [messageHistory, setMessageHistory] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -20,15 +20,23 @@ const ChatBot = () => {
       const completion = await openai.completions.create({
         model: "gpt-3.5-turbo-instruct",
         prompt: fullPrompt,
-        max_tokens: 300,
+        max_tokens: 100,
       });
       const newApiResponse = completion.choices[0].text;
-      setApiResponses([...apiResponses, newApiResponse]);
+
+      setMessageHistory([
+        ...messageHistory,
+        { question: prompt, response: newApiResponse }
+      ]);
     } catch (e) {
       console.log(e);
-      setApiResponses([...apiResponses, "Something is going wrong. Please try again."]);
+      setMessageHistory([
+        ...messageHistory,
+        { question: prompt, response: "Something is going wrong. Please try again." }
+      ]);
     }
     setLoading(false);
+    setPrompt(""); // Clear prompt after submission
   };
 
   return (
@@ -39,8 +47,11 @@ const ChatBot = () => {
             <div className="box">
               <h2 className="subtitle">Message History</h2>
               <ul>
-                {apiResponses.map((response, index) => (
-                  <li key={index}>{response}</li>
+                {messageHistory.map((message, index) => (
+                  <li key={index}>
+                    <strong>Question:</strong> {message.question}<br />
+                    <strong>Response:</strong> {message.response}
+                  </li>
                 ))}
               </ul>
             </div>
@@ -54,7 +65,7 @@ const ChatBot = () => {
                     <textarea
                       className="textarea"
                       value={prompt}
-                      placeholder="Ask your question here!"
+                      placeholder="Please ask to OpenAI"
                       onChange={(e) => setPrompt(e.target.value)}
                     ></textarea>
                   </div>
