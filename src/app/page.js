@@ -11,6 +11,14 @@ import {
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import { useMap } from "@vis.gl/react-google-maps";
 
+const eventEmojis = {
+  sport: "⚽",
+  nature: "🌳",
+  community: "🏘️",
+  leadership: "👑",
+  sustainability: "♻️",
+};
+
 const Markers = ({ events }) => {
   const map = useMap();
   const [markers, setMarkers] = useState({});
@@ -46,7 +54,7 @@ const Markers = ({ events }) => {
           key={event.key}
           ref={(marker) => setMarkerRef(marker, event.key)}
         >
-          <span className="tree">🌳</span>
+          <span className="text-2xl">{eventEmojis[event.type]}</span>
         </AdvancedMarker>
       ))}
     </>
