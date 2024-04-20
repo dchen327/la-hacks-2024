@@ -65,7 +65,7 @@ const ChatBot = () => {
                     <textarea
                       className="textarea"
                       value={prompt}
-                      placeholder="Please ask to OpenAI"
+                      placeholder="Ask your question here!"
                       onChange={(e) => setPrompt(e.target.value)}
                     ></textarea>
                   </div>
