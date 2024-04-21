@@ -13,7 +13,7 @@ export default function Page() {
   const [user, loading, error] = useAuthState(auth);
   const [events, setEvents] = useState([]);
 
-  const [showOnlyRegistered, setShowOnlyRegistered] = useState(false);
+  const [showOnlyRegistered, setShowOnlyRegistered] = useState([]);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -38,7 +38,6 @@ export default function Page() {
         })
       );
       setEvents(updatedEvents);
-      // setEvents(eventList);
     };
     fetchEvents();
   }, []);
@@ -75,7 +74,7 @@ export default function Page() {
       {filteredEvents.map((event, idx) => (
         <React.Fragment key={event.id || idx}>
         <div>
-          <EventCard key={event.id || idx} event={event} />
+          <EventCard key={event.id || idx} event={event} user ={user} />
         </div>
         {idx !== events.length - 1 && <hr className="py-[1px]" />}
       </React.Fragment>

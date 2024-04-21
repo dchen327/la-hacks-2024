@@ -1,41 +1,44 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore"; 
+import { db } from "../firebase/config";
 import React, { useState } from 'react';
+import { useRouter } from "next/navigation";
 import {
   faHeart,
   faShareNodes,
 } from "@fortawesome/free-solid-svg-icons";
 
-export const EventCard = ({ event }) => {
+export const EventCard = ({ event, user }) => {
   // only display first 200 chars of description
   const description =
     event.description.length > 200
       ? event.description.substring(0, 200) + "..."
       : event.description;
   const weather = event.weather;
+  const router = useRouter();
 
-  const [isRegistered, setIsRegistered] = useState(false);
-  // const toggleRegistration = () => {
-  //   setIsRegistered(!isRegistered);
-  // };
+  const [isRegistered, setIsRegistered] = useState(event.isRegistered ? event.isRegistered.includes(user.uid) : false);
 
-  const toggleRegistration = async (eventId, userId) => {
-    const eventRef = doc(db, "events", eventId);
+  const toggleRegistration = async () => {
+    const eventRef = doc(db, "events", event.id);
 
-    if (isRegistered) {
-      // If the user is currently registered, remove them from the registered list
-      await updateDoc(eventRef, {
-        isRegistered: arrayRemove(user.Id)
-      });
-    } else {
-      await updateDoc(eventRef, {
-        isRegistered: arrayUnion(user.Id)
-      });
+    try {
+      if (isRegistered) {
+        await updateDoc(eventRef, {
+          isRegistered: arrayRemove(user.uid)
+        });
+      } else {
+        await updateDoc(eventRef, {
+          isRegistered: arrayUnion(user.uid)
+        });
+      }
+      setIsRegistered(!isRegistered);  // Toggle the local state
+      router.reload()
+    } catch (error) {
+      console.error("Error updating registration status:", error);
     }
-
-    // Toggle the local state to reflect the change
-    setIsRegistered(!isRegistered);
   };
+
 
 
     return (
