@@ -26,7 +26,9 @@ export const EventMapModal = ({ event, onClose }) => {
                 <div className="flex flex-row mb-0">
                   <p className="is-6">{event.leader}</p>
                   <p className="is-6 font-thin">•</p>
-                  <p className="is-6">{createdDate}</p>
+                  <p className="is-6">
+                    {createdDate} {event.startTime}
+                  </p>
                 </div>
               </div>
               <div className="bg-gray-100 rounded">

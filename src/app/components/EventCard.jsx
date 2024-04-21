@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore"; 
-import React, { useState } from 'react';
+import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
+import React, { useState } from "react";
 import { faHeart, faShareNodes } from "@fortawesome/free-solid-svg-icons";
 import { getDistance } from "geolib";
 
@@ -23,18 +23,17 @@ export const EventCard = ({ event }) => {
     if (isRegistered) {
       // If the user is currently registered, remove them from the registered list
       await updateDoc(eventRef, {
-        isRegistered: arrayRemove(user.Id)
+        isRegistered: arrayRemove(user.Id),
       });
     } else {
       await updateDoc(eventRef, {
-        isRegistered: arrayUnion(user.Id)
+        isRegistered: arrayUnion(user.Id),
       });
     }
 
     // Toggle the local state to reflect the change
     setIsRegistered(!isRegistered);
   };
-
 
   const claremont = { latitude: 34.11228, longitude: -117.71489 };
   let distance = getDistance(claremont, event.location);
@@ -56,7 +55,9 @@ export const EventCard = ({ event }) => {
             <div className="flex flex-row mb-0">
               <p className="is-6">{event.leader}</p>
               <p className="is-6 font-thin">•</p>
-              <p className="is-6">{createdDate}</p>
+              <p className="is-6">
+                {createdDate} {event.startTime}
+              </p>
             </div>
           </div>
           <div className="bg-gray-100 rounded">
@@ -64,11 +65,14 @@ export const EventCard = ({ event }) => {
           </div>
         </div>
         <div className="content">{description}</div>
-          <div className="content">{weather}</div>
+        <div className="content">{weather}</div>
         <div className="buttons are-small mt-2">
-          <button className={`button ${isRegistered ? 'is-success' : 'is-info'}`} onClick={toggleRegistration}>
-              {isRegistered ? 'Registered' : 'Register'}
-            </button>
+          <button
+            className={`button ${isRegistered ? "is-success" : "is-info"}`}
+            onClick={toggleRegistration}
+          >
+            {isRegistered ? "Registered" : "Register"}
+          </button>
           <button className="button is-light">
             <FontAwesomeIcon icon={faHeart} />
           </button>
