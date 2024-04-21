@@ -20,6 +20,7 @@ export default function ProfilePage() {
   const [user, setUser] = useState(null);
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
+  const [city, setCity] = useState("");
   const [email, setEmail] = useState("");
   const [country, setCountry] = useState('');
   const [state, setState] = useState('');
@@ -77,6 +78,7 @@ export default function ProfilePage() {
       const data = docSnap.data();
       setName(data.name);
       setAge(data.age);
+      setCity(data.city);
       setEmail(data.email);
       setCountry(data.country);
       setState(data.state);
@@ -92,7 +94,7 @@ export default function ProfilePage() {
     if (!user) return;
     const userRef = doc(db, "users", user.uid);
     try {
-      await setDoc(userRef, { name, age, email, country, state, isDriver, seatLimit, distanceLimit }, { merge: true });
+      await setDoc(userRef, { name, age, email, country, state, isDriver, seatLimit, distanceLimit, city }, { merge: true });
       setIsUpdated(true);
     } catch (error) {
       console.error("Error updating profile: ", error);
@@ -217,6 +219,13 @@ export default function ProfilePage() {
     </div>
 
     <div className="field">
+      <label className="label">City</label>
+      <div className="control">
+        <input className="input" type="string" value={city} onChange={(e) => setCity(e.target.value)} placeholder="Enter your city" />
+      </div>
+    </div>
+
+    <div className="field">
       <label className="label">Email</label>
       <div className="control has-icons-left has-icons-right">
         <input className="input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter your email" />
@@ -288,7 +297,7 @@ export default function ProfilePage() {
       </div>
     
     <h1 className="title">Questions?</h1>
-    <div><ChatBot userInfo={{ name: name, state: state, country: country, age: age }}  /></div>
+    <div><ChatBot userInfo={{ name: name, state: state, country: country, age: age, city: city }}  /></div>
     <div className="field is-grouped mb-20">
 
         <div className="control">

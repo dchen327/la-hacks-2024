@@ -4,7 +4,7 @@ import OpenAI from "openai";
 const ChatBot = ({ userInfo }) => {
   const buildPrompt = (question) => {
     const preliminaryInfo = "You are a bot for an app that gives people information on nearby social and outdoor events. If you cannot respond within the token limit, please do not cut off mid-sentence. If a user asks a question not related to social or outdoor events, please respond with a message saying \"Sorry, I am not programmed to answer this type of question. Please ask another one\""
-    const personalInfo = `You are talking to a person named ${userInfo.name} from ${userInfo.state}, ${userInfo.country}. They are ${userInfo.age} years old. This is their question: `;
+    const personalInfo = `You are talking to a person named ${userInfo.name} from ${userInfo.city} in ${userInfo.state}, ${userInfo.country}. They are ${userInfo.age} years old. This is their question: `;
     return preliminaryInfo+personalInfo+`${question}`;
   };
   const openai = new OpenAI({

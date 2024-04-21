@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { addDoc, doc, setDoc } from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 import { db } from "../firebase/config";
 import {
   APIProvider,
@@ -10,11 +10,6 @@ import {
 import { useMap } from "@vis.gl/react-google-maps";
 
 const MapComponent = ({ handleMapClick }) => {
-  const map = useMap();
-  const [pickedLoc, setPickedLoc] = useState(null);
-
-  // Rest of your code that uses the map variable...
-
   return (
     <Map
       style={{ width: "100vw", height: "100vh" }}
@@ -31,7 +26,7 @@ const MapComponent = ({ handleMapClick }) => {
 const EventForm = ({ user }) => {
   const initialFormData = {
     eventName: "",
-    eventType: "sport", // default to 'sport'
+    type: "sport",
     description: "",
     date: "",
     startTime: "",
@@ -51,10 +46,19 @@ const EventForm = ({ user }) => {
       lat: event.detail.latLng.lat,
       lng: event.detail.latLng.lng,
     });
+    // set form data with firebase LatLng object
+    setFormData((prevState) => ({
+      ...prevState,
+      location: {
+        latitude: event.detail.latLng.lat,
+        longitude: event.detail.latLng.lng,
+      },
+    }));
     setShowLocationPicker(false);
   };
 
   const handleChange = (event) => {
+    console.log(event);
     const { name, value } = event.target;
     setFormData((prevState) => ({
       ...prevState,
@@ -69,14 +73,14 @@ const EventForm = ({ user }) => {
       ...formData,
       creatorId: user.uid,
       creatorEmail: user.email,
+      leader: user.displayName,
       createdAt: new Date(),
     };
 
-    const eventRef = doc(db, "events", "test");
     try {
-      await setDoc(eventRef, eventData);
+      const docRef = await addDoc(collection(db, "events"), eventData);
       setIsSubmitted(true);
-      console.log("Document written with ID: ", eventRef.id);
+      console.log("Document written with ID: ", docRef.id);
       setFormData(initialFormData);
     } catch (error) {
       console.error("Error adding event: ", error);
@@ -129,15 +133,15 @@ const EventForm = ({ user }) => {
               <div className="control">
                 <div className="select">
                   <select
-                    name="eventType"
-                    value={formData.eventType}
+                    name="type"
+                    value={formData.type}
                     onChange={handleChange}
                   >
                     <option value="sport">Sport</option>
                     <option value="nature">Nature</option>
                     <option value="community">Community</option>
                     <option value="sustainability">Sustainability</option>
-                    <option value="Leadership">Sustainability</option>
+                    <option value="leadership">Leadership</option>
                   </select>
                 </div>
               </div>
@@ -217,6 +221,7 @@ const EventForm = ({ user }) => {
                   </div>
                 )}
                 <button
+                  type="button"
                   className="button"
                   onClick={() => setShowLocationPicker(true)}
                 >
