@@ -33,6 +33,7 @@ const EventForm = ({ user }) => {
     startTime: "",
     endTime: "",
     location: "",
+    isRegistered: [user.uid],
   };
 
   const [formData, setFormData] = useState(initialFormData);

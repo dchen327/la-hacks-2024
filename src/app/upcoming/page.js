@@ -79,14 +79,6 @@ export default function Page() {
         {idx !== events.length - 1 && <hr className="py-[1px]" />}
       </React.Fragment>
       ))}
-      {/* {events.map((event, idx) => (
-        <React.Fragment key={event.id || idx}>
-          <div>
-            <EventCard key={event.id || idx} event={event} />
-          </div>
-          {idx !== events.length - 1 && <hr className="py-[1px]" />}
-        </React.Fragment>
-      ))} */}
     </div>
   );
 }
