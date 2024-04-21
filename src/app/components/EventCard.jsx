@@ -1,14 +1,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore"; 
+import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import { db } from "../firebase/config";
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  faHeart,
-  faShareNodes,
-} from "@fortawesome/free-solid-svg-icons";
+import { faHeart, faShareNodes } from "@fortawesome/free-solid-svg-icons";
 
-export const EventCard = ({ event, user }) => {
+export const EventCard = ({ event, user, refreshKey, setRefreshKey }) => {
   // only display first 200 chars of description
   const description =
     event.description.length > 200
@@ -17,7 +14,9 @@ export const EventCard = ({ event, user }) => {
   const weather = event.weather;
   const router = useRouter();
 
-  const [isRegistered, setIsRegistered] = useState(event.isRegistered ? event.isRegistered.includes(user.uid) : false);
+  const [isRegistered, setIsRegistered] = useState(
+    event.isRegistered ? event.isRegistered.includes(user.uid) : false
+  );
 
   const LikeButton = () => {
     const [liked, setLiked] = useState(false);
@@ -71,21 +70,20 @@ export const EventCard = ({ event, user }) => {
     try {
       if (isRegistered) {
         await updateDoc(eventRef, {
-          isRegistered: arrayRemove(user.uid)
+          isRegistered: arrayRemove(user.uid),
         });
       } else {
         await updateDoc(eventRef, {
-          isRegistered: arrayUnion(user.uid)
+          isRegistered: arrayUnion(user.uid),
         });
       }
-      setIsRegistered(!isRegistered);  // Toggle the local state
-      router.reload()
+      setIsRegistered(!isRegistered); // Toggle the local state
+      console.log("refresh");
+      setRefreshKey(refreshKey + 1); // Trigger a refresh of the events
     } catch (error) {
       console.error("Error updating registration status:", error);
     }
   };
-
-
 
     return (
       <div className="card is-shadowless">

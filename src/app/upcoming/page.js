@@ -12,6 +12,7 @@ import React from "react";
 export default function Page() {
   const [user, loading, error] = useAuthState(auth);
   const [events, setEvents] = useState([]);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const [showOnlyRegistered, setShowOnlyRegistered] = useState([]);
 
@@ -40,7 +41,7 @@ export default function Page() {
       setEvents(updatedEvents);
     };
     fetchEvents();
-  }, []);
+  }, [refreshKey]);
 
   if (loading) {
     return (
@@ -74,7 +75,7 @@ export default function Page() {
       {filteredEvents.map((event, idx) => (
         <React.Fragment key={event.id || idx}>
         <div>
-          <EventCard key={event.id || idx} event={event} user ={user} />
+          <EventCard key={event.id || idx} event={event} user ={user} refreshKey={refreshKey} setRefreshKey={setRefreshKey} />
         </div>
         {idx !== events.length - 1 && <hr className="py-[1px]" />}
       </React.Fragment>
