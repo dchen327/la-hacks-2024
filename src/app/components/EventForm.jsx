@@ -10,11 +10,6 @@ import {
 import { useMap } from "@vis.gl/react-google-maps";
 
 const MapComponent = ({ handleMapClick }) => {
-  const map = useMap();
-  const [pickedLoc, setPickedLoc] = useState(null);
-
-  // Rest of your code that uses the map variable...
-
   return (
     <Map
       style={{ width: "100vw", height: "100vh" }}
@@ -51,6 +46,14 @@ const EventForm = ({ user }) => {
       lat: event.detail.latLng.lat,
       lng: event.detail.latLng.lng,
     });
+    // set form data with firebase LatLng object
+    setFormData((prevState) => ({
+      ...prevState,
+      location: {
+        latitude: event.detail.latLng.lat,
+        longitude: event.detail.latLng.lng,
+      },
+    }));
     setShowLocationPicker(false);
   };
 
@@ -69,6 +72,7 @@ const EventForm = ({ user }) => {
       ...formData,
       creatorId: user.uid,
       creatorEmail: user.email,
+      leader: user.displayName,
       createdAt: new Date(),
     };
 
@@ -216,6 +220,7 @@ const EventForm = ({ user }) => {
                   </div>
                 )}
                 <button
+                  type="button"
                   className="button"
                   onClick={() => setShowLocationPicker(true)}
                 >
