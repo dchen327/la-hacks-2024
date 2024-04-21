@@ -43,8 +43,15 @@ const EventForm = ({ user }) => {
   const [pickedLocation, setPickedLocation] = useState(null);
 
   const generateData = () => {
+    const latRange = 0.4;
+    const lngRange = 1;
+    // const defaultLat = 34.11228;
+    const defaultLat = 33.9030605697786;
+    // const defaultLng =  -117.71489
+    const defaultLng = -117.70286460460032;
+
     const events = [];
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < 50; i++) {
       events.push({
         createdAt: new Date(),
         creatorId: user.uid,
@@ -55,8 +62,8 @@ const EventForm = ({ user }) => {
         eventName: faker.lorem.words(),
         leader: user.displayName,
         location: {
-          lat: 34.11228 + Math.random() * 0.1,
-          lng: -117.71489 + Math.random() * 0.1,
+          latitude: defaultLat + Math.random() * latRange - latRange / 2,
+          longitude: defaultLng + Math.random() * lngRange - lngRange / 2,
         },
         type: faker.helpers.arrayElement([
           "sport",
@@ -278,9 +285,9 @@ const EventForm = ({ user }) => {
           </div>
         </form>
       </div>
-      <button className="button" onClick={generateData}>
+      {/* <button className="button" onClick={generateData}>
         Generate data
-      </button>
+      </button> */}
       {showLocationPicker && (
         <div className="modal is-active">
           <div className="modal-background"></div>
