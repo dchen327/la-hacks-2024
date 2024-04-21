@@ -171,7 +171,6 @@ export default function Home() {
         <div className="title mx-2 mt-2 mb-0">
           Hello {user.displayName.split(" ")[0]}
         </div>
-        <div>{searchValue}</div>
         <div>
           {/* <GooglePlacesAutocomplete
             selectProps={{
@@ -186,7 +185,6 @@ export default function Home() {
             apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
           /> */}
         </div>
-        <div>{events.length}</div>
         <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}>
           <Map
             style={{ width: "100vw", height: "100vh" }}
