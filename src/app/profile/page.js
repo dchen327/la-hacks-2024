@@ -32,6 +32,11 @@ export default function ProfilePage() {
     setIsDriver(event.target.value === "yes");
   };
 
+  const logOut = async () => {
+    await signOut(auth);
+    router.push("/");
+  };
+
   const radardata = [
     {
       data: {

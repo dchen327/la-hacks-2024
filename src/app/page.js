@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "./firebase/config";
+import { auth, googleProvider } from "../app/firebase/config";
+import { signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
 import {
   APIProvider,
   AdvancedMarker,
@@ -15,6 +15,7 @@ import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import { geocodeByAddress, getLatLng } from "react-google-places-autocomplete";
 import { db } from "../app/firebase/config";
 import { collection, getDocs } from "firebase/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 const eventEmojis = {
   sport: "⚽",
@@ -223,4 +224,17 @@ export default function Home() {
       </div>
     );
   }
+
+  return (
+    <div className="container has-text-centered">
+      <p className="subtitle is-5">Please log in to view events</p>
+      {/* sign in button but only for mobile */}
+      <button
+        className="button is-primary is-hidden-desktop"
+        onClick={() => signInWithPopup(auth, googleProvider)}
+      >
+        Sign in with Google
+      </button>
+    </div>
+  );
 }
