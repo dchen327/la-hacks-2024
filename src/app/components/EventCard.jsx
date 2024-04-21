@@ -1,4 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore"; 
 import React, { useState } from 'react';
 import {
   faHeart,
@@ -14,9 +15,28 @@ export const EventCard = ({ event }) => {
   const weather = event.weather;
 
   const [isRegistered, setIsRegistered] = useState(false);
-  const toggleRegistration = () => {
+  // const toggleRegistration = () => {
+  //   setIsRegistered(!isRegistered);
+  // };
+
+  const toggleRegistration = async (eventId, userId) => {
+    const eventRef = doc(db, "events", eventId);
+
+    if (isRegistered) {
+      // If the user is currently registered, remove them from the registered list
+      await updateDoc(eventRef, {
+        isRegistered: arrayRemove(user.Id)
+      });
+    } else {
+      await updateDoc(eventRef, {
+        isRegistered: arrayUnion(user.Id)
+      });
+    }
+
+    // Toggle the local state to reflect the change
     setIsRegistered(!isRegistered);
   };
+
 
     return (
       <div className="card is-shadowless">

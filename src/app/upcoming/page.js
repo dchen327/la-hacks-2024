@@ -1,7 +1,7 @@
 "use client";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase/config";
-import { useRouter } from "next/navigation"; // Correct import for Next.js router
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { EventCard } from "../components/EventCard";
@@ -13,8 +13,7 @@ export default function Page() {
   const [user, loading, error] = useAuthState(auth);
   const [events, setEvents] = useState([]);
 
-  const [showOnlyRegistered, setShowOnlyRegistered] = useState([]);
-  const filteredEvents = showOnlyRegistered ? events.filter(e => e.isRegistered) : events;
+  const [showOnlyRegistered, setShowOnlyRegistered] = useState(false);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -24,7 +23,6 @@ export default function Page() {
         id: doc.id,
         ...doc.data(),
       }));
-      // setEvents(eventList);
       const apiKey = process.env.NEXT_PUBLIC_WEATHER_API_KEY; // Ensure this is correctly set in your environment
       const updatedEvents = await Promise.all(
         eventList.map(async (event) => {
@@ -65,6 +63,9 @@ export default function Page() {
   }
 
   if (!user) return <p>Please log in to view events</p>;
+
+  const filteredEvents = showOnlyRegistered ? events.filter(event => event.isRegistered && event.isRegistered.includes(user.uid)) : events;
+
 
   return (
     <div className="mb-14">
