@@ -9,6 +9,7 @@ import {
 } from "@vis.gl/react-google-maps";
 import { useMap } from "@vis.gl/react-google-maps";
 import { faker } from "@faker-js/faker";
+import OpenAI from "openai";
 
 const MapComponent = ({ handleMapClick }) => {
   return (
@@ -111,8 +112,27 @@ const EventForm = ({ user }) => {
     }));
   };
 
+  const getItems = async (formData) => {
+    const openai = new OpenAI({
+      apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+      dangerouslyAllowBrowser: true,
+    });
+    const fullPrompt = `Based on the following event details: The event is ${formData.eventName} and its description is ${formData.description}. It is at ${formData.location} and is happening on ${formData.date}. The type of event is ${formData.type}. What are the best items to bring to this event? If you cannot respond within the token limit, please do not cut off mid-sentence.`;
+    console.log(fullPrompt);
+    const completion = await openai.completions.create({
+      model: "gpt-3.5-turbo-instruct",
+      prompt: fullPrompt,
+      max_tokens: 100,
+    });
+    const newApiResponse = completion.choices[0].text;
+    console.log(newApiResponse);
+    return newApiResponse;
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    const hikeItems = await getItems(formData);
 
     const eventData = {
       ...formData,
@@ -120,6 +140,7 @@ const EventForm = ({ user }) => {
       creatorEmail: user.email,
       leader: user.displayName,
       createdAt: new Date(),
+      items: hikeItems,
     };
 
     try {
