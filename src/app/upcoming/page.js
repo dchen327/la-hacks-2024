@@ -8,6 +8,7 @@ import { EventCard } from "../components/EventCard";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase/config";
 import React from "react";
+import { faker } from "@faker-js/faker";
 
 export default function Page() {
   const [user, setUser] = useState(null);
@@ -39,21 +40,21 @@ export default function Page() {
         ...doc.data(),
       }));
       const apiKey = process.env.NEXT_PUBLIC_WEATHER_API_KEY; // Ensure this is correctly set in your environment
-      const randomTemp = faker.number.between(60, 80);
-      const randomWeather = faker.random.arrayElement([
-        "sunny",
-        "cloudy",
-        "rainy",
-        "snowy",
-        "windy",
-        "partially cloudy",
-      ]);
-      const weatherStr = `${randomTemp}°F, ${randomWeather}`;
+
       const updatedEvents = await Promise.all(
         eventList.map(async (event) => {
           const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${event.location.latitude}&lon=${event.location.longitude}&units=imperial&appid=${apiKey}`;
           const response = await fetch(weatherUrl);
           const data = await response.json();
+          const randomTemp = faker.number.int({ min: 63, max: 79 });
+          const randomWeather = faker.helpers.arrayElement([
+            "sunny",
+            "cloudy",
+            "rainy",
+            "windy",
+            "partially cloudy",
+          ]);
+          const weatherStr = `${randomTemp}°F, ${randomWeather}`;
           return {
             ...event,
             weather: data.weather
