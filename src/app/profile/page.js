@@ -120,7 +120,7 @@ export default function ProfilePage() {
             className="delete"
             onClick={() => setErrorMessage("")}
           ></button>
-          {errorMessage}
+          Please try again: all fields are required.
         </div>
       )}
 

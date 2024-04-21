@@ -13,6 +13,9 @@ export default function Page() {
   const [user, loading, error] = useAuthState(auth);
   const [events, setEvents] = useState([]);
 
+  const [showOnlyRegistered, setShowOnlyRegistered] = useState([]);
+  const filteredEvents = showOnlyRegistered ? events.filter(e => e.isRegistered) : events;
+
   useEffect(() => {
     const fetchEvents = async () => {
       const eventsCollection = collection(db, "events");
@@ -65,14 +68,25 @@ export default function Page() {
 
   return (
     <div className="mb-14">
-      {events.map((event, idx) => (
+      <button className="button is-warning" onClick={() => setShowOnlyRegistered(!showOnlyRegistered)}>
+        {showOnlyRegistered ? 'Show All Events' : 'Show Registered Events'}
+      </button>
+      {filteredEvents.map((event, idx) => (
+        <React.Fragment key={event.id || idx}>
+        <div>
+          <EventCard key={event.id || idx} event={event} />
+        </div>
+        {idx !== events.length - 1 && <hr className="py-[1px]" />}
+      </React.Fragment>
+      ))}
+      {/* {events.map((event, idx) => (
         <React.Fragment key={event.id || idx}>
           <div>
             <EventCard key={event.id || idx} event={event} />
           </div>
           {idx !== events.length - 1 && <hr className="py-[1px]" />}
         </React.Fragment>
-      ))}
+      ))} */}
     </div>
   );
 }

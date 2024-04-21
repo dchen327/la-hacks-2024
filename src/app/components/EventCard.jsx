@@ -1,4 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useState } from 'react';
 import {
   faHeart,
   faShareNodes,
@@ -11,6 +12,11 @@ export const EventCard = ({ event }) => {
       ? event.description.substring(0, 200) + "..."
       : event.description;
   const weather = event.weather;
+
+  const [isRegistered, setIsRegistered] = useState(false);
+  const toggleRegistration = () => {
+    setIsRegistered(!isRegistered);
+  };
 
     return (
       <div className="card is-shadowless">
@@ -31,7 +37,9 @@ export const EventCard = ({ event }) => {
           <div className="content">{description}</div>
           <div className="content">{weather}</div>
           <div className="buttons are-small mt-2">
-            <button className="button is-info">Register</button>
+            <button className={`button ${isRegistered ? 'is-success' : 'is-info'}`} onClick={toggleRegistration}>
+              {isRegistered ? 'Registered' : 'Register'}
+            </button>
             <button className="button is-light">
                 <FontAwesomeIcon icon={faHeart} />
             </button>
