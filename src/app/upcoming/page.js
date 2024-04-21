@@ -39,6 +39,16 @@ export default function Page() {
         ...doc.data(),
       }));
       const apiKey = process.env.NEXT_PUBLIC_WEATHER_API_KEY; // Ensure this is correctly set in your environment
+      const randomTemp = faker.number.between(60, 80);
+      const randomWeather = faker.random.arrayElement([
+        "sunny",
+        "cloudy",
+        "rainy",
+        "snowy",
+        "windy",
+        "partially cloudy",
+      ]);
+      const weatherStr = `${randomTemp}°F, ${randomWeather}`;
       const updatedEvents = await Promise.all(
         eventList.map(async (event) => {
           const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${event.location.latitude}&lon=${event.location.longitude}&units=imperial&appid=${apiKey}`;
@@ -48,7 +58,8 @@ export default function Page() {
             ...event,
             weather: data.weather
               ? `${data.main.temp}°F, ${data.weather[0].description}`
-              : "No weather data",
+              : weatherStr,
+            // : "No weather data",
           };
         })
       );
@@ -73,11 +84,17 @@ export default function Page() {
       </button>
       {filteredEvents.map((event, idx) => (
         <React.Fragment key={event.id || idx}>
-        <div>
-          <EventCard key={event.id || idx} event={event} user ={user} refreshKey={refreshKey} setRefreshKey={setRefreshKey} />
-        </div>
-        {idx !== events.length - 1 && <hr className="py-[1px]" />}
-      </React.Fragment>
+          <div>
+            <EventCard
+              key={event.id || idx}
+              event={event}
+              user={user}
+              refreshKey={refreshKey}
+              setRefreshKey={setRefreshKey}
+            />
+          </div>
+          {idx !== events.length - 1 && <hr className="py-[1px]" />}
+        </React.Fragment>
       ))}
     </div>
   );
