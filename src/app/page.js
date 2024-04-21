@@ -158,16 +158,18 @@ export default function Home() {
         </div>
         <div>{searchValue}</div>
         <div>
-          <h1 className="subtitle mt-1 mx-2 mt-2 mb-0">Search </h1>
-          <GooglePlacesAutocomplete
-            selectProps={{ searchValue, onChange: setSearchValue }}
+          {/* <GooglePlacesAutocomplete
+            selectProps={{
+              searchValue,
+              onChange: setSearchValue,
+            }}
             autocompletionRequest={{
               componentRestrictions: {
                 country: ["us"],
               },
             }}
             apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
-          />
+          /> */}
         </div>
         <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}>
           <Map
