@@ -18,9 +18,9 @@ import { collection, getDocs } from "firebase/firestore";
 
 const eventEmojis = {
   sport: "⚽",
-  nature: "🌳",
+  nature: "🌱",
   community: "🏘️",
-  leadership: "👑",
+  leadership: "🚀",
   sustainability: "♻️",
 };
 
