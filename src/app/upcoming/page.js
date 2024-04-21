@@ -10,7 +10,21 @@ import { db } from "../firebase/config";
 import React from "react";
 
 export default function Page() {
-  const [user, loading, error] = useAuthState(auth);
+  const [user, setUser] = useState(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+      } else {
+        router.push("/");
+      }
+    });
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, [router]);
   const [events, setEvents] = useState([]);
 
   const [showOnlyRegistered, setShowOnlyRegistered] = useState(false);
@@ -43,42 +57,27 @@ export default function Page() {
     fetchEvents();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen mx-10">
-        <progress
-          className="progress is-small is-primary max-w-[500px]"
-          max="100"
-        ></progress>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <p>Error: {error}</p>
-      </div>
-    );
-  }
-
-  if (!user) return <p>Please log in to view events</p>;
-
-  const filteredEvents = showOnlyRegistered ? events.filter(event => event.isRegistered && event.isRegistered.includes(user.uid)) : events;
-
+  const filteredEvents = showOnlyRegistered
+    ? events.filter(
+        (event) => event.isRegistered && event.isRegistered.includes(user.uid)
+      )
+    : events;
 
   return (
     <div className="mb-14">
-      <button className="button is-warning" onClick={() => setShowOnlyRegistered(!showOnlyRegistered)}>
-        {showOnlyRegistered ? 'Show All Events' : 'Show Registered Events'}
+      <button
+        className="button is-warning"
+        onClick={() => setShowOnlyRegistered(!showOnlyRegistered)}
+      >
+        {showOnlyRegistered ? "Show All Events" : "Show Registered Events"}
       </button>
       {filteredEvents.map((event, idx) => (
         <React.Fragment key={event.id || idx}>
-        <div>
-          <EventCard key={event.id || idx} event={event} />
-        </div>
-        {idx !== events.length - 1 && <hr className="py-[1px]" />}
-      </React.Fragment>
+          <div>
+            <EventCard key={event.id || idx} event={event} />
+          </div>
+          {idx !== events.length - 1 && <hr className="py-[1px]" />}
+        </React.Fragment>
       ))}
     </div>
   );

@@ -15,7 +15,7 @@ import { faCircleUser } from "@fortawesome/free-regular-svg-icons";
 export const Navbar = () => {
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
+useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
     });
