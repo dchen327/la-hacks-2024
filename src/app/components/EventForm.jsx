@@ -8,6 +8,7 @@ import {
   Marker,
 } from "@vis.gl/react-google-maps";
 import { useMap } from "@vis.gl/react-google-maps";
+import { faker } from "@faker-js/faker";
 import OpenAI from "openai";
 
 const MapComponent = ({ handleMapClick }) => {
@@ -43,6 +44,51 @@ const EventForm = ({ user }) => {
   const [showLocationPicker, setShowLocationPicker] = useState(false);
   const [pickedLocation, setPickedLocation] = useState(null);
 
+  const generateData = () => {
+    const latRange = 0.4;
+    const lngRange = 1;
+    // const defaultLat = 34.11228;
+    const defaultLat = 33.9030605697786;
+    // const defaultLng =  -117.71489
+    const defaultLng = -117.70286460460032;
+
+    const events = [];
+    for (let i = 0; i < 50; i++) {
+      events.push({
+        createdAt: new Date(),
+        creatorId: user.uid,
+        creatorEmail: user.email,
+        description: faker.lorem.paragraph(),
+        endTime: "3:00",
+        startTime: "12:00",
+        eventName: faker.lorem.words(),
+        leader: user.displayName,
+        location: {
+          latitude: defaultLat + Math.random() * latRange - latRange / 2,
+          longitude: defaultLng + Math.random() * lngRange - lngRange / 2,
+        },
+        type: faker.helpers.arrayElement([
+          "sport",
+          "nature",
+          "community",
+          "sustainability",
+          "leadership",
+        ]),
+      });
+    }
+    console.log(events);
+
+    // push to db
+    events.forEach(async (event) => {
+      try {
+        const docRef = await addDoc(collection(db, "events"), event);
+        console.log("Document written with ID: ", docRef.id);
+      } catch (error) {
+        console.error("Error adding event: ", error);
+      }
+    });
+  };
+
   const handleMapClick = (event) => {
     setPickedLocation({
       lat: event.detail.latLng.lat,
@@ -77,12 +123,12 @@ const EventForm = ({ user }) => {
     const completion = await openai.completions.create({
       model: "gpt-3.5-turbo-instruct",
       prompt: fullPrompt,
-      max_tokens: 100,
+      max_tokens: 200,
     });
     const newApiResponse = completion.choices[0].text;
-    console.log(newApiResponse)
-    return newApiResponse
-  }
+    console.log(newApiResponse);
+    return newApiResponse;
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -261,6 +307,9 @@ const EventForm = ({ user }) => {
           </div>
         </form>
       </div>
+      {/* <button className="button" onClick={generateData}>
+        Generate data
+      </button> */}
       {showLocationPicker && (
         <div className="modal is-active">
           <div className="modal-background"></div>

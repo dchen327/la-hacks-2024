@@ -1,7 +1,13 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faShareNodes } from "@fortawesome/free-solid-svg-icons";
+import { getDistance } from "geolib";
 
 export const EventMapModal = ({ event, onClose }) => {
+  const claremont = { latitude: 34.11228, longitude: -117.71489 };
+  let distance = getDistance(claremont, event.location);
+  // convert distance (in meters) to miles, with 1 decimal point
+  distance = Math.round((distance / 1609.344) * 10) / 10;
+
   return (
     <div className="modal is-active justify-end mb-14">
       <div className="modal-background bg-transparent" onClick={onClose}></div>
@@ -18,7 +24,7 @@ export const EventMapModal = ({ event, onClose }) => {
                 </div>
               </div>
               <div className="bg-gray-100 rounded">
-                <p className="p-1 text-lg text-black is-4">1.3mi</p>
+                <p className="p-1 text-lg text-black is-4">{distance}mi</p>
               </div>
             </div>
             <div className="content">{event.description}</div>
