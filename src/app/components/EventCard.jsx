@@ -19,6 +19,52 @@ export const EventCard = ({ event, user }) => {
 
   const [isRegistered, setIsRegistered] = useState(event.isRegistered ? event.isRegistered.includes(user.uid) : false);
 
+  const LikeButton = () => {
+    const [liked, setLiked] = useState(false);
+  
+    const toggleLike = () => {
+      setLiked(!liked); // Toggle liked state
+    };
+  
+    return (
+      <button className={`button is-light ${liked ? 'is-danger' : ''}`} onClick={toggleLike}>
+        <FontAwesomeIcon icon={faHeart} color={liked ? 'red' : 'black'} />
+      </button>
+    );
+  };
+
+  const [showModal, setShowModal] = useState(false);
+
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
+
+  const Modal = ({ show, onClose, event }) => {
+    if (!show) {
+      return null;
+    }
+
+    return (
+      <div className="modal is-active">
+        <div className="modal-background" onClick={onClose}></div>
+        <div className="modal-card">
+          <header className="modal-card-head">
+            <p className="modal-card-title">Event Invitation</p>
+            <button className="delete" aria-label="close" onClick={onClose}></button>
+          </header>
+          <section className="modal-card-body">
+            <p>Please join me at <strong>{event.eventName}</strong>!</p>
+            <p>Time: {new Date(event.createdAt).toLocaleString()}</p>
+            <p>Don't forget to bring: {event.items}</p>
+          </section>
+          <footer className="modal-card-foot">
+            <button className="button" onClick={onClose}>Close</button>
+          </footer>
+        </div>
+      </div>
+    );
+  };
+
   const toggleRegistration = async () => {
     const eventRef = doc(db, "events", event.id);
 
@@ -63,14 +109,13 @@ export const EventCard = ({ event, user }) => {
             <button className={`button ${isRegistered ? 'is-success' : 'is-info'}`} onClick={toggleRegistration}>
               {isRegistered ? 'Registered' : 'Register'}
             </button>
-            <button className="button is-light">
-                <FontAwesomeIcon icon={faHeart} />
-            </button>
-            <button className="button is-light">
+            <LikeButton />
+            <button className="button is-light" onClick={toggleModal}>
               <FontAwesomeIcon icon={faShareNodes} />
             </button>
           </div>
         </div>
+        <Modal show={showModal} onClose={toggleModal} event={event} />
       </div>
     );
 };
