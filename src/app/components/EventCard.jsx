@@ -1,10 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore"; 
-import React, { useState } from 'react';
-import {faHeart, faShareNodes} from "@fortawesome/free-solid-svg-icons";
+import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
+import React, { useState } from "react";
+import { faHeart, faShareNodes } from "@fortawesome/free-solid-svg-icons";
 import { getDistance } from "geolib";
 import { useRouter } from "next/navigation";
-
 
 export const EventCard = ({ event, user, refreshKey, setRefreshKey }) => {
   // only display first 200 chars of description
@@ -21,14 +20,17 @@ export const EventCard = ({ event, user, refreshKey, setRefreshKey }) => {
 
   const LikeButton = () => {
     const [liked, setLiked] = useState(false);
-  
+
     const toggleLike = () => {
       setLiked(!liked); // Toggle liked state
     };
-  
+
     return (
-      <button className={`button is-light ${liked ? 'is-danger' : ''}`} onClick={toggleLike}>
-        <FontAwesomeIcon icon={faHeart} color={liked ? 'red' : 'black'} />
+      <button
+        className={`button is-light ${liked ? "is-danger" : ""}`}
+        onClick={toggleLike}
+      >
+        <FontAwesomeIcon icon={faHeart} color={liked ? "red" : "black"} />
       </button>
     );
   };
@@ -43,11 +45,11 @@ export const EventCard = ({ event, user, refreshKey, setRefreshKey }) => {
     if (!show) {
       return null;
     }
-  const createdAt = event.createdAt.toDate();
-  const createdDate = createdAt.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-  });
+    const createdAt = event.createdAt.toDate();
+    const createdDate = createdAt.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+    });
 
     return (
       <div className="modal is-active">
@@ -55,15 +57,25 @@ export const EventCard = ({ event, user, refreshKey, setRefreshKey }) => {
         <div className="modal-card">
           <header className="modal-card-head">
             <p className="modal-card-title">Event Invitation</p>
-            <button className="delete" aria-label="close" onClick={onClose}></button>
+            <button
+              className="delete"
+              aria-label="close"
+              onClick={onClose}
+            ></button>
           </header>
           <section className="modal-card-body">
-            <p>Please join me at <strong>{event.eventName}</strong>!</p>
-            <p>Time: {createdDate} at {event.startTime}</p>
-            <p>Don't forget to bring: {event.items}</p>
+            <p>
+              Please join me at <strong>{event.eventName}</strong>!
+            </p>
+            <p>
+              Time: {createdDate} at {event.startTime}
+            </p>
+            <p>Remember to bring: {event.items}</p>
           </section>
           <footer className="modal-card-foot">
-            <button className="button" onClick={onClose}>Close</button>
+            <button className="button" onClick={onClose}>
+              Close
+            </button>
           </footer>
         </div>
       </div>
@@ -129,13 +141,13 @@ export const EventCard = ({ event, user, refreshKey, setRefreshKey }) => {
             {isRegistered ? "Registered" : "Register"}
           </button>
           <LikeButton />
-          
+
           <button className="button is-light" onClick={toggleModal}>
-              <FontAwesomeIcon icon={faShareNodes} />
-            </button>
-          </div>
+            <FontAwesomeIcon icon={faShareNodes} />
+          </button>
         </div>
-        <Modal show={showModal} onClose={toggleModal} event={event} />
       </div>
+      <Modal show={showModal} onClose={toggleModal} event={event} />
+    </div>
   );
 };
