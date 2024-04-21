@@ -26,7 +26,9 @@ export const EventMapModal = ({ event, onClose }) => {
                 <div className="flex flex-row mb-0">
                   <p className="is-6">{event.leader}</p>
                   <p className="is-6 font-thin">•</p>
-                  <p className="is-6">{createdDate}</p>
+                  <p className="is-6">
+                    {createdDate} {event.startTime}
+                  </p>
                 </div>
               </div>
               <div className="bg-gray-100 rounded">
@@ -34,7 +36,9 @@ export const EventMapModal = ({ event, onClose }) => {
               </div>
             </div>
             <div className="content">{event.description}</div>
-            <div className="suggested items">{"Suggested items to bring:" + event.items}</div>
+            <div className="suggested items">
+              {"Suggested items to bring:" + event.items}
+            </div>
             <div className="buttons are-small mt-2">
               <button className="button is-info">Register</button>
               <button className="button is-light">
