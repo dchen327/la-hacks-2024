@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { faHeart, faShareNodes } from "@fortawesome/free-solid-svg-icons";
 import { getDistance } from "geolib";
 import { useRouter } from "next/navigation";
+import { db } from "../firebase/config";
 
 export const EventCard = ({ event, user, refreshKey, setRefreshKey }) => {
   // only display first 200 chars of description
@@ -96,7 +97,6 @@ export const EventCard = ({ event, user, refreshKey, setRefreshKey }) => {
         });
       }
       setIsRegistered(!isRegistered); // Toggle the local state
-      console.log("refresh");
       setRefreshKey(refreshKey + 1); // Trigger a refresh of the events
     } catch (error) {
       console.error("Error updating registration status:", error);
