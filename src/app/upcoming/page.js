@@ -5,27 +5,29 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { EventCard } from "../components/EventCard";
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase/config";
-import React from 'react';
+import React from "react";
 
 export default function Page() {
   const [user, loading, error] = useAuthState(auth);
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-      const fetchEvents = async () => {
-          const eventsCollection = collection(db, "events");
-          const eventSnapshot = await getDocs(eventsCollection);
-          const eventList = eventSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-          console.log("found events")
-          console.log(events.length);
-          setEvents(eventList);
-      };
+    const fetchEvents = async () => {
+      const eventsCollection = collection(db, "events");
+      const eventSnapshot = await getDocs(eventsCollection);
+      const eventList = eventSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      console.log("found events");
+      console.log(events.length);
+      setEvents(eventList);
+    };
 
-      fetchEvents();
+    fetchEvents();
   }, []);
-
 
   if (loading) {
     return (
@@ -50,18 +52,20 @@ export default function Page() {
 
   if (user) {
     return (
-      <div className="mb-14">
-        {events.map((event, idx) => (
-          // TBD change the key to event id
-          <React.Fragment key={idx}>
-            <div>
-              <EventCard key={idx} event={event} />
-            </div>
-            {idx !== events.length - 1 && <hr className="py-[1px]" />}
-          </React.Fragment>
-        ))}
-      </div>
+      <>
+        <div className="title mx-2 mt-2 mb-2">Upcoming Events</div>
+        <div className="mb-14">
+          {events.map((event, idx) => (
+            // TBD change the key to event id
+            <React.Fragment key={idx}>
+              <div>
+                <EventCard key={idx} event={event} />
+              </div>
+              {idx !== events.length - 1 && <hr className="py-[1px]" />}
+            </React.Fragment>
+          ))}
+        </div>
+      </>
     );
   }
-
 }

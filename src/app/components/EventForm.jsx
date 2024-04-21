@@ -219,7 +219,7 @@ const EventForm = ({ user }) => {
               Description:
               <div className="control">
                 <textarea
-                  className="textarea"
+                  className="textarea font-normal"
                   name="description"
                   value={formData.description}
                   onChange={handleChange}

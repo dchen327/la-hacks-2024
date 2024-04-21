@@ -23,9 +23,11 @@ export default function Page() {
   }, [router]);
 
   return (
-    <div className="mb-14">
-      <EventForm user={user}/>
-    </div>
+    <>
+      <div className="title mx-2 mt-2 mb-2">Create Event</div>
+      <div className="mb-14 mx-3">
+        <EventForm user={user} />
+      </div>
+    </>
   );
-
 }
