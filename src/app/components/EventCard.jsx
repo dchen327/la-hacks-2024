@@ -43,6 +43,11 @@ export const EventCard = ({ event, user, refreshKey, setRefreshKey }) => {
     if (!show) {
       return null;
     }
+  const createdAt = event.createdAt.toDate();
+  const createdDate = createdAt.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
 
     return (
       <div className="modal is-active">
@@ -54,7 +59,7 @@ export const EventCard = ({ event, user, refreshKey, setRefreshKey }) => {
           </header>
           <section className="modal-card-body">
             <p>Please join me at <strong>{event.eventName}</strong>!</p>
-            <p>Time: {new Date(event.createdAt).toLocaleString()}</p>
+            <p>Time: {createdDate} at {event.startTime}</p>
             <p>Don't forget to bring: {event.items}</p>
           </section>
           <footer className="modal-card-foot">
