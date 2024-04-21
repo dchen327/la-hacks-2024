@@ -118,7 +118,7 @@ const EventForm = ({ user }) => {
       apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
       dangerouslyAllowBrowser: true,
     });
-    const fullPrompt = `Based on the following event details: The event is ${formData.eventName} and its description is ${formData.description}. It is at ${formData.location} and is happening on ${formData.date}. The type of event is ${formData.type}. What are the best items to bring to this event? If you cannot respond within the token limit, please do not cut off mid-sentence.`;
+    const fullPrompt = `Based on the following event details: The event is ${formData.eventName} and its description is ${formData.description}. It is at ${formData.location} and is happening on ${formData.date}. The type of event is ${formData.type}. What are the best items to bring to this event? Please return a numbered list of items, without any explanation about why you chose these items. Each item should be on its own line.`;
     console.log(fullPrompt);
     const completion = await openai.completions.create({
       model: "gpt-3.5-turbo-instruct",
@@ -220,7 +220,7 @@ const EventForm = ({ user }) => {
               Description:
               <div className="control">
                 <textarea
-                  className="textarea"
+                  className="textarea font-normal"
                   name="description"
                   value={formData.description}
                   onChange={handleChange}

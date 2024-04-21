@@ -8,6 +8,12 @@ export const EventMapModal = ({ event, onClose }) => {
   // convert distance (in meters) to miles, with 1 decimal point
   distance = Math.round((distance / 1609.344) * 10) / 10;
 
+  const createdAt = event.createdAt.toDate();
+  const createdDate = createdAt.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
+
   return (
     <div className="modal is-active justify-end mb-14">
       <div className="modal-background bg-transparent" onClick={onClose}></div>
@@ -16,11 +22,11 @@ export const EventMapModal = ({ event, onClose }) => {
           <div className="card-content px-4 py-2">
             <div className="media mb-2 flex items-center">
               <div className="media-content">
-                <p className="title is-4 mb-2">{event.title}</p>
+                <p className="title is-4 mb-2">{event.eventName}</p>
                 <div className="flex flex-row mb-0">
                   <p className="is-6">{event.leader}</p>
                   <p className="is-6 font-thin">•</p>
-                  <p className="is-6">Wed</p>
+                  <p className="is-6">{createdDate}</p>
                 </div>
               </div>
               <div className="bg-gray-100 rounded">
@@ -28,6 +34,7 @@ export const EventMapModal = ({ event, onClose }) => {
               </div>
             </div>
             <div className="content">{event.description}</div>
+            <div className="suggested items">{"Suggested items to bring:" + event.items}</div>
             <div className="buttons are-small mt-2">
               <button className="button is-info">Register</button>
               <button className="button is-light">
