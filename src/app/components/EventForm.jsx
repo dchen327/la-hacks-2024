@@ -122,7 +122,7 @@ const EventForm = ({ user }) => {
     const completion = await openai.completions.create({
       model: "gpt-3.5-turbo-instruct",
       prompt: fullPrompt,
-      max_tokens: 100,
+      max_tokens: 200,
     });
     const newApiResponse = completion.choices[0].text;
     console.log(newApiResponse);
