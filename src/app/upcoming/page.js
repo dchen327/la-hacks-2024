@@ -25,13 +25,13 @@ export default function Page() {
       const apiKey = process.env.NEXT_PUBLIC_WEATHER_API_KEY; // Ensure this is correctly set in your environment
       const updatedEvents = await Promise.all(
         eventList.map(async (event) => {
-          const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${event.location.latitude}&lon=${event.location.longitude}&units=metric&appid=${apiKey}`;
+          const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${event.location.latitude}&lon=${event.location.longitude}&units=imperial&appid=${apiKey}`;
           const response = await fetch(weatherUrl);
           const data = await response.json();
           return {
             ...event,
             weather: data.weather
-              ? `${data.main.temp}°C, ${data.weather[0].description}`
+              ? `${data.main.temp}°F, ${data.weather[0].description}`
               : "No weather data",
           };
         })
