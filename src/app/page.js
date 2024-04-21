@@ -16,6 +16,8 @@ import { geocodeByAddress, getLatLng } from "react-google-places-autocomplete";
 import { db } from "../app/firebase/config";
 import { collection, getDocs } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faWind } from "@fortawesome/free-solid-svg-icons";
 
 const eventEmojis = {
   sport: "⚽",
@@ -171,6 +173,7 @@ export default function Home() {
       <div>
         <div className="title mx-2 mt-2 mb-0">
           Hello {user.displayName.split(" ")[0]}
+          <FontAwesomeIcon icon={faWind} size="sm" className="ml-3" />
         </div>
         <div>
           {/* <GooglePlacesAutocomplete
