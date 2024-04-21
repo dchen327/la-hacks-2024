@@ -10,6 +10,7 @@ export const EventCard = ({ event }) => {
     event.description.length > 200
       ? event.description.substring(0, 200) + "..."
       : event.description;
+  const weather = event.weather;
 
     return (
       <div className="card is-shadowless">
@@ -28,6 +29,7 @@ export const EventCard = ({ event }) => {
             </div>
           </div>
           <div className="content">{description}</div>
+          <div className="content">{weather}</div>
           <div className="buttons are-small mt-2">
             <button className="button is-info">Register</button>
             <button className="button is-light">

@@ -3,6 +3,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase/config";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import EventForm from "../components/EventForm";
 
 export default function Page() {
   const [user, setUser] = useState(null);
@@ -21,5 +22,10 @@ export default function Page() {
     return () => unsubscribe();
   }, [router]);
 
-  return <div>hello world</div>;
+  return (
+    <div className="mb-14">
+      <EventForm user={user}/>
+    </div>
+  );
+
 }
