@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { addDoc, doc, setDoc } from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 import { db } from "../firebase/config";
 import {
   APIProvider,
@@ -72,11 +72,10 @@ const EventForm = ({ user }) => {
       createdAt: new Date(),
     };
 
-    const eventRef = doc(db, "events", "test");
     try {
-      await setDoc(eventRef, eventData);
+      const docRef = await addDoc(collection(db, "events"), eventData);
       setIsSubmitted(true);
-      console.log("Document written with ID: ", eventRef.id);
+      console.log("Document written with ID: ", docRef.id);
       setFormData(initialFormData);
     } catch (error) {
       console.error("Error adding event: ", error);
@@ -129,15 +128,15 @@ const EventForm = ({ user }) => {
               <div className="control">
                 <div className="select">
                   <select
-                    name="eventType"
-                    value={formData.eventType}
+                    name="type"
+                    value={formData.type}
                     onChange={handleChange}
                   >
                     <option value="sport">Sport</option>
                     <option value="nature">Nature</option>
                     <option value="community">Community</option>
                     <option value="sustainability">Sustainability</option>
-                    <option value="Leadership">Sustainability</option>
+                    <option value="leadership">Leadership</option>
                   </select>
                 </div>
               </div>

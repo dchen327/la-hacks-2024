@@ -16,7 +16,7 @@ export const EventCard = ({ event }) => {
         <div className="card-content px-4 py-2">
           <div className="media mb-2 flex items-center">
             <div className="media-content">
-              <p className="title is-4 mb-2">{event.title}</p>
+              <p className="title is-4 mb-2">{event.name}</p>
               <div className="flex flex-row mb-0">
                 <p className="is-6">{event.leader}</p>
                 <p className="is-6 font-thin">•</p>
