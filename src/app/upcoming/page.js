@@ -26,8 +26,9 @@ export default function Page() {
     return () => unsubscribe();
   }, [router]);
   const [events, setEvents] = useState([]);
+  const [refreshKey, setRefreshKey] = useState(0);
 
-  const [showOnlyRegistered, setShowOnlyRegistered] = useState(false);
+  const [showOnlyRegistered, setShowOnlyRegistered] = useState([]);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -52,10 +53,9 @@ export default function Page() {
         })
       );
       setEvents(updatedEvents);
-      // setEvents(eventList);
     };
     fetchEvents();
-  }, []);
+  }, [refreshKey]);
 
   const filteredEvents = showOnlyRegistered
     ? events.filter(
@@ -73,11 +73,11 @@ export default function Page() {
       </button>
       {filteredEvents.map((event, idx) => (
         <React.Fragment key={event.id || idx}>
-          <div>
-            <EventCard key={event.id || idx} event={event} />
-          </div>
-          {idx !== events.length - 1 && <hr className="py-[1px]" />}
-        </React.Fragment>
+        <div>
+          <EventCard key={event.id || idx} event={event} user ={user} refreshKey={refreshKey} setRefreshKey={setRefreshKey} />
+        </div>
+        {idx !== events.length - 1 && <hr className="py-[1px]" />}
+      </React.Fragment>
       ))}
     </div>
   );

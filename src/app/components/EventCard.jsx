@@ -1,40 +1,90 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
-import React, { useState } from "react";
-import { faHeart, faShareNodes } from "@fortawesome/free-solid-svg-icons";
+import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore"; 
+import React, { useState } from 'react';
+import {faHeart, faShareNodes} from "@fortawesome/free-solid-svg-icons";
 import { getDistance } from "geolib";
+import { useRouter } from "next/navigation";
 
-export const EventCard = ({ event }) => {
+
+export const EventCard = ({ event, user, refreshKey, setRefreshKey }) => {
   // only display first 200 chars of description
   const description =
     event.description.length > 200
       ? event.description.substring(0, 200) + "..."
       : event.description;
   const weather = event.weather;
+  const router = useRouter();
 
-  const [isRegistered, setIsRegistered] = useState(false);
-  // const toggleRegistration = () => {
-  //   setIsRegistered(!isRegistered);
-  // };
+  const [isRegistered, setIsRegistered] = useState(
+    event.isRegistered ? event.isRegistered.includes(user.uid) : false
+  );
 
-  const toggleRegistration = async (eventId, userId) => {
-    const eventRef = doc(db, "events", eventId);
-
-    if (isRegistered) {
-      // If the user is currently registered, remove them from the registered list
-      await updateDoc(eventRef, {
-        isRegistered: arrayRemove(user.Id),
-      });
-    } else {
-      await updateDoc(eventRef, {
-        isRegistered: arrayUnion(user.Id),
-      });
-    }
-
-    // Toggle the local state to reflect the change
-    setIsRegistered(!isRegistered);
+  const LikeButton = () => {
+    const [liked, setLiked] = useState(false);
+  
+    const toggleLike = () => {
+      setLiked(!liked); // Toggle liked state
+    };
+  
+    return (
+      <button className={`button is-light ${liked ? 'is-danger' : ''}`} onClick={toggleLike}>
+        <FontAwesomeIcon icon={faHeart} color={liked ? 'red' : 'black'} />
+      </button>
+    );
   };
 
+  const [showModal, setShowModal] = useState(false);
+
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
+
+  const Modal = ({ show, onClose, event }) => {
+    if (!show) {
+      return null;
+    }
+
+    return (
+      <div className="modal is-active">
+        <div className="modal-background" onClick={onClose}></div>
+        <div className="modal-card">
+          <header className="modal-card-head">
+            <p className="modal-card-title">Event Invitation</p>
+            <button className="delete" aria-label="close" onClick={onClose}></button>
+          </header>
+          <section className="modal-card-body">
+            <p>Please join me at <strong>{event.eventName}</strong>!</p>
+            <p>Time: {new Date(event.createdAt).toLocaleString()}</p>
+            <p>Don't forget to bring: {event.items}</p>
+          </section>
+          <footer className="modal-card-foot">
+            <button className="button" onClick={onClose}>Close</button>
+          </footer>
+        </div>
+      </div>
+    );
+  };
+
+  const toggleRegistration = async () => {
+    const eventRef = doc(db, "events", event.id);
+
+    try {
+      if (isRegistered) {
+        await updateDoc(eventRef, {
+          isRegistered: arrayRemove(user.uid),
+        });
+      } else {
+        await updateDoc(eventRef, {
+          isRegistered: arrayUnion(user.uid),
+        });
+      }
+      setIsRegistered(!isRegistered); // Toggle the local state
+      console.log("refresh");
+      setRefreshKey(refreshKey + 1); // Trigger a refresh of the events
+    } catch (error) {
+      console.error("Error updating registration status:", error);
+    }
+  };
   const claremont = { latitude: 34.11228, longitude: -117.71489 };
   let distance = getDistance(claremont, event.location);
   // convert distance (in meters) to miles, with 1 decimal point
@@ -73,14 +123,14 @@ export const EventCard = ({ event }) => {
           >
             {isRegistered ? "Registered" : "Register"}
           </button>
-          <button className="button is-light">
-            <FontAwesomeIcon icon={faHeart} />
-          </button>
-          <button className="button is-light">
-            <FontAwesomeIcon icon={faShareNodes} />
-          </button>
+          <LikeButton />
+          
+          <button className="button is-light" onClick={toggleModal}>
+              <FontAwesomeIcon icon={faShareNodes} />
+            </button>
+          </div>
         </div>
+        <Modal show={showModal} onClose={toggleModal} event={event} />
       </div>
-    </div>
   );
 };
