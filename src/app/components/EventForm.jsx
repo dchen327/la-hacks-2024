@@ -58,7 +58,6 @@ const EventForm = ({ user }) => {
   };
 
   const handleChange = (event) => {
-    console.log(event);
     const { name, value } = event.target;
     setFormData((prevState) => ({
       ...prevState,

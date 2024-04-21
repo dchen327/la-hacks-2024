@@ -13,6 +13,8 @@ import { useMap } from "@vis.gl/react-google-maps";
 import { EventMapModal } from "./components/EventMapModal";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import { geocodeByAddress, getLatLng } from "react-google-places-autocomplete";
+import { db } from "../app/firebase/config";
+import { collection, getDocs } from "firebase/firestore";
 
 const eventEmojis = {
   sport: "⚽",
@@ -60,18 +62,24 @@ const Markers = ({ events, setClickedEvent, setShowEventMapModal }) => {
     });
   };
 
+  // loop through and if event.location.lat is null, console.log the event
+
   return (
     <>
-      {events.map((event) => (
-        <AdvancedMarker
-          position={event.location}
-          key={event.key}
-          ref={(marker) => setMarkerRef(marker, event.key)}
-          onClick={() => handleMarkerClick(event)}
-        >
-          <span className="text-2xl">{eventEmojis[event.type]}</span>
-        </AdvancedMarker>
-      ))}
+      {events.length > 0 &&
+        events.map(
+          (event) =>
+            event.location.lat && (
+              <AdvancedMarker
+                position={event.location}
+                key={event.key}
+                ref={(marker) => setMarkerRef(marker, event.key)}
+                onClick={() => handleMarkerClick(event)}
+              >
+                <span className="text-2xl">{eventEmojis[event.type]}</span>
+              </AdvancedMarker>
+            )
+        )}
     </>
   );
 };
@@ -83,10 +91,28 @@ export default function Home() {
   const [searchValue, setSearchValue] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const map = useMap();
+  const [events, setEvents] = useState([]);
 
-  const handleMapClick = (event) => {
-    console.log(event.detail.latLng);
-  };
+  useEffect(() => {
+    const fetchEvents = async () => {
+      const eventsCollection = collection(db, "events");
+      const eventSnapshot = await getDocs(eventsCollection);
+      const eventList = eventSnapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          key: doc.id,
+          ...data,
+          location: {
+            lat: parseFloat(data.location.latitude),
+            lng: parseFloat(data.location.longitude),
+          },
+        };
+      });
+      setEvents(eventList);
+    };
+
+    fetchEvents();
+  }, []);
 
   useEffect(() => {
     console.log("selected location changed");
@@ -95,41 +121,41 @@ export default function Home() {
     }
   }, [map, searchValue]);
 
-  const events = [
-    {
-      name: "Football Match",
-      type: "sport",
-      description: "A friendly football match between local teams.",
-      leader: "John Doe",
-      startTime: new Date("2022-04-01T10:00:00Z"),
-      endTime: new Date("2022-04-01T12:00:00Z"),
-      location: { lat: 34.11228, lng: -117.71489 },
-      usersAttending: ["user1", "user2", "user3"],
-      pictures: ["pic1.jpg", "pic2.jpg", "pic3.jpg"],
-    },
-    {
-      name: "Nature Walk",
-      type: "nature",
-      description: "A guided walk through the local nature reserve.",
-      leader: "Jane Smith",
-      startTime: new Date("2022-04-02T09:00:00Z"),
-      endTime: new Date("2022-04-02T11:00:00Z"),
-      location: { lat: 34.21228, lng: -117.71489 },
-      usersAttending: ["user4", "user5", "user6"],
-      pictures: ["pic4.jpg", "pic5.jpg", "pic6.jpg"],
-    },
-    {
-      name: "Community Cleanup",
-      type: "community",
-      description: "A community event to clean up the local park.",
-      leader: "Bob Johnson",
-      startTime: new Date("2022-04-03T13:00:00Z"),
-      endTime: new Date("2022-04-03T15:00:00Z"),
-      location: { lat: 34.11228, lng: -117.81489 },
-      usersAttending: ["user7", "user8", "user9"],
-      pictures: ["pic7.jpg", "pic8.jpg", "pic9.jpg"],
-    },
-  ];
+  // const events = [
+  //   {
+  //     name: "Football Match",
+  //     type: "sport",
+  //     description: "A friendly football match between local teams.",
+  //     leader: "John Doe",
+  //     startTime: new Date("2022-04-01T10:00:00Z"),
+  //     endTime: new Date("2022-04-01T12:00:00Z"),
+  //     location: { lat: 34.11228, lng: -117.71489 },
+  //     usersAttending: ["user1", "user2", "user3"],
+  //     pictures: ["pic1.jpg", "pic2.jpg", "pic3.jpg"],
+  //   },
+  //   {
+  //     name: "Nature Walk",
+  //     type: "nature",
+  //     description: "A guided walk through the local nature reserve.",
+  //     leader: "Jane Smith",
+  //     startTime: new Date("2022-04-02T09:00:00Z"),
+  //     endTime: new Date("2022-04-02T11:00:00Z"),
+  //     location: { lat: 34.21228, lng: -117.71489 },
+  //     usersAttending: ["user4", "user5", "user6"],
+  //     pictures: ["pic4.jpg", "pic5.jpg", "pic6.jpg"],
+  //   },
+  //   {
+  //     name: "Community Cleanup",
+  //     type: "community",
+  //     description: "A community event to clean up the local park.",
+  //     leader: "Bob Johnson",
+  //     startTime: new Date("2022-04-03T13:00:00Z"),
+  //     endTime: new Date("2022-04-03T15:00:00Z"),
+  //     location: { lat: 34.11228, lng: -117.81489 },
+  //     usersAttending: ["user7", "user8", "user9"],
+  //     pictures: ["pic7.jpg", "pic8.jpg", "pic9.jpg"],
+  //   },
+  // ];
 
   if (loading) {
     return (
@@ -179,7 +205,6 @@ export default function Home() {
             defaultZoom={11}
             gestureHandling={"greedy"}
             disableDefaultUI={true}
-            onClick={handleMapClick}
           >
             <Markers
               events={events}
