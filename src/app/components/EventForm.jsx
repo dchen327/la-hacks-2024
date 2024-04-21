@@ -34,6 +34,7 @@ const EventForm = ({ user }) => {
     startTime: "",
     endTime: "",
     location: "",
+    // isRegistered: [user.uid],
   };
 
   const [formData, setFormData] = useState(initialFormData);
@@ -219,7 +220,7 @@ const EventForm = ({ user }) => {
               Description:
               <div className="control">
                 <textarea
-                  className="textarea"
+                  className="textarea font-normal"
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
