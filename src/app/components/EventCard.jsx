@@ -8,10 +8,11 @@ import { db } from "../firebase/config";
 
 export const EventCard = ({ event, user, refreshKey, setRefreshKey }) => {
   // only display first 200 chars of description
-  const description =
-    event.description.length > 200
-      ? event.description.substring(0, 200) + "..."
-      : event.description;
+  // const description =
+  //   event.description.length > 200
+  //     ? event.description.substring(0, 200) + "..."
+  //     : event.description;
+  const description = event.description;
   const weather = event.weather;
   const router = useRouter();
 
