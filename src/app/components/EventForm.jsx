@@ -26,7 +26,7 @@ const MapComponent = ({ handleMapClick }) => {
 const EventForm = ({ user }) => {
   const initialFormData = {
     eventName: "",
-    eventType: "sport", // default to 'sport'
+    type: "sport",
     description: "",
     date: "",
     startTime: "",
@@ -58,6 +58,7 @@ const EventForm = ({ user }) => {
   };
 
   const handleChange = (event) => {
+    console.log(event);
     const { name, value } = event.target;
     setFormData((prevState) => ({
       ...prevState,
