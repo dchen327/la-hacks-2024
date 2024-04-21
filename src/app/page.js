@@ -27,14 +27,6 @@ const eventEmojis = {
 const Markers = ({ events, setClickedEvent, setShowEventMapModal }) => {
   const map = useMap();
   const [markers, setMarkers] = useState({});
-  const clusterer = useRef(null);
-
-  useEffect(() => {
-    if (!map) return;
-    if (!clusterer.current) {
-      clusterer.current = new MarkerClusterer({ map });
-    }
-  }, [map]);
 
   const setMarkerRef = (marker, key) => {
     if (marker && markers[key]) return;
@@ -62,8 +54,6 @@ const Markers = ({ events, setClickedEvent, setShowEventMapModal }) => {
     });
   };
 
-  // loop through and if event.location.lat is null, console.log the event
-
   return (
     <>
       {events.length > 0 &&
@@ -90,7 +80,7 @@ export default function Home() {
   const [clickedEvent, setClickedEvent] = useState({});
   const [searchValue, setSearchValue] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
-  const map = useMap();
+  // const map = useMap();
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
@@ -114,12 +104,11 @@ export default function Home() {
     fetchEvents();
   }, []);
 
-  useEffect(() => {
-    console.log("selected location changed");
-    if (map && searchValue) {
-      map.panTo(searchValue);
-    }
-  }, [map, searchValue]);
+  // useEffect(() => {
+  //   if (map && searchValue) {
+  //     map.panTo(searchValue);
+  //   }
+  // }, [map, searchValue]);
 
   // const events = [
   //   {
@@ -197,6 +186,7 @@ export default function Home() {
             apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
           /> */}
         </div>
+        <div>{events.length}</div>
         <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}>
           <Map
             style={{ width: "100vw", height: "100vh" }}
@@ -206,11 +196,24 @@ export default function Home() {
             gestureHandling={"greedy"}
             disableDefaultUI={true}
           >
-            <Markers
-              events={events}
-              setClickedEvent={setClickedEvent}
-              setShowEventMapModal={setShowEventMapModal}
-            />
+            {events.length > 0 &&
+              events.map(
+                (event) =>
+                  event.location.lat && (
+                    <AdvancedMarker
+                      position={event.location}
+                      key={event.key}
+                      onClick={() => {
+                        setClickedEvent(event);
+                        setShowEventMapModal(true);
+                      }}
+                    >
+                      <span className="text-2xl">
+                        {eventEmojis[event.type]}
+                      </span>
+                    </AdvancedMarker>
+                  )
+              )}
           </Map>
         </APIProvider>
         {showEventMapModal && (

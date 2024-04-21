@@ -28,6 +28,7 @@
     "react-svg-radar-chart": "^1.4.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
     "@types/react": "^18.2.79",
     "eslint": "^8",
     "eslint-config-next": "14.2.2",

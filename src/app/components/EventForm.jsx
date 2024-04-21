@@ -8,6 +8,7 @@ import {
   Marker,
 } from "@vis.gl/react-google-maps";
 import { useMap } from "@vis.gl/react-google-maps";
+import { faker } from "@faker-js/faker";
 
 const MapComponent = ({ handleMapClick }) => {
   return (
@@ -40,6 +41,44 @@ const EventForm = ({ user }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [showLocationPicker, setShowLocationPicker] = useState(false);
   const [pickedLocation, setPickedLocation] = useState(null);
+
+  const generateData = () => {
+    const events = [];
+    for (let i = 0; i < 1; i++) {
+      events.push({
+        createdAt: new Date(),
+        creatorId: user.uid,
+        creatorEmail: user.email,
+        description: faker.lorem.paragraph(),
+        endTime: "3:00",
+        startTime: "12:00",
+        eventName: faker.lorem.words(),
+        leader: user.displayName,
+        location: {
+          lat: 34.11228 + Math.random() * 0.1,
+          lng: -117.71489 + Math.random() * 0.1,
+        },
+        type: faker.helpers.arrayElement([
+          "sport",
+          "nature",
+          "community",
+          "sustainability",
+          "leadership",
+        ]),
+      });
+    }
+    console.log(events);
+
+    // push to db
+    events.forEach(async (event) => {
+      try {
+        const docRef = await addDoc(collection(db, "events"), event);
+        console.log("Document written with ID: ", docRef.id);
+      } catch (error) {
+        console.error("Error adding event: ", error);
+      }
+    });
+  };
 
   const handleMapClick = (event) => {
     setPickedLocation({
@@ -239,6 +278,9 @@ const EventForm = ({ user }) => {
           </div>
         </form>
       </div>
+      <button className="button" onClick={generateData}>
+        Generate data
+      </button>
       {showLocationPicker && (
         <div className="modal is-active">
           <div className="modal-background"></div>
